@@ -1,0 +1,27 @@
+README FOR SAFARI WATSON
+
+IMPORTANT:
+Please always create your own branch or work on the same branch together for modular coding practice. We need to keep our master very clean in order to make sure we have as few conflicts as possible. Be sure to SYNC FIRST, then do pull requests when you want to merge your code into master. 
+
+
+TO RUN
+------------
+On your command prompt in the Education Game Directory:
+
+python Egame.py
+
+
+
+
+
+
+DATABASE API
+____________
+
+
+
+
+
+
+USEFUL WATSON API
+-------------
