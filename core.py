@@ -52,6 +52,23 @@ class SafariWorld():
         self.ecology_in_world = 0
         self.player = None
 
+        # load the picture of arrows with missing spaces for ecology
+
+        # load initial 3 ecology plants/animals 
+
+    def play(self):
+        self.add_museum_token()
+        pass
+        # allow player to drag and drop the 3 ecology animals and plants into proper places
+
+        # have either autocheck or 'check' button
+
+        #remember to display more eco plants and animals with new web when player gets the first section right. Must source our plants and animals from the db if possible. 
+
+    def add_museum_token(self):    
+        # place item in museum if it's time. should place one in museum after doing the first 3 so we have it set up for future iteraitons. 
+        pass
+
     def draw(self, dimensions, screen):
         pygame.draw.rect(screen, BLUE, dimensions)
 
@@ -66,6 +83,9 @@ class Watson():
 
     def __init__(self):
         pass
+        #make clickable
+
+        #have an question box, an 'ask' button, and an answer section where the information from watson is displayed. 
 
     def draw(self, dimensions, screen):
         pygame.draw.rect(screen, BLUE, dimensions)
@@ -100,6 +120,9 @@ class Museum():
 
     def __init__(self):
         self.tokens = [] #the tokens in the museum
+        #make msuseum clickable. should open to a new page where it displays the tokens and has a back button
+
+        #when clicked on the token, should present 3 subtopics based on player's interest
 
     def add_token(self, token):
         self.tokens.add(token)
@@ -133,6 +156,7 @@ class Ecology():
         #opacity should be either 0, 1, 2, or 3, depending on how many questions the person has answered about the specific animal/plant
         self.opacity = 0 
 
+        #make clickable
 
     def update_opacity(self):
         pass
