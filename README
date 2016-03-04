@@ -19,6 +19,57 @@ DATABASE API
 ____________
 
 
+add_User(str name):
+
+Generates a new user profile and add their "name" and default starting data to the table.
+
+---
+
+get_Users():
+
+Returns a list of strings which contains the names of all users who have a profile within the database.
+
+---
+
+get_User_Data(str name):
+
+Returns a string containing the profile data for the named user.
+
+---
+
+update_User_Data(str name, str data):
+
+Replaces the data for the given user with the given data string.
+
+---
+
+remove_User(str name):
+
+Removes the named user and their profile from the database.
+
+---
+
+add_QA_Pair(str question, str answer):
+
+Adds a given question and answer pair to the question pool.
+
+---
+
+print_QA_Pairs():
+
+Prints all stored questions, along with their answers. (Debug only)
+
+---
+
+get_QA_Pair(int rowid):
+
+Returns a question/answer tuple matching the given row/question number.
+
+---
+
+remove_QA_Pair(rowid):
+
+Removes the question/answer pair from the question pool at the given row.
 
 
 
