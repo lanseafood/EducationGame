@@ -8,9 +8,10 @@ world = GameScreen(0, (200,200, 500, 500), (900,900), 'bob')
 # DISPLAYSURF = pygame.display.set_mode((400,400))
 # pygame.display.set_caption('SAFARI WATSON')
 
-while True:
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				pygame.quit()
-				sys.exit()
-		pygame.display.update()
+world.run()
+# while True:
+# 		for event in pygame.event.get():
+# 			if event.type == QUIT:
+# 				pygame.quit()
+# 				sys.exit()
+# 		pygame.display.update()

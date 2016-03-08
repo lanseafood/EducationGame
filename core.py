@@ -1,11 +1,15 @@
 # THE DEFINITIONS OF OBJECTS IN THE GAME
 import sys, pygame, math, numpy, random, time, copy
+import text_input as ti
+import eztext as et
 from pygame.locals import * 
 
 #global definitions
 WHITE = (255,255,255)
 BLUE = (0,0,255)
 BLACK = (0,0,0)
+GRAY = (100,100,100)
+GREEN = ( 0, 255, 0)
 
 #The game screen player will interaction with. Includes the game, the museum, the world, and ecology.
 class GameScreen():
@@ -42,7 +46,16 @@ class GameScreen():
         text = font.render('Score: ', True, (0,128,0))
         self.screen.blit(text, (100 // 2 , 100 // 2))
 
-
+    def run(self):
+        while True:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+            # self.ecology_test.text1.update(events)
+            # self.ecology_test.text1.draw(self.screen)
+            pygame.display.update()
 
 # -------------------------------------------------------------------------------------------------
 #The drag and drop game
@@ -144,22 +157,62 @@ class Token():
 
 class Ecology():
 
-    def __init__(self, name, type_of_creature):
+    def __init__(self, name, type_of_creature, screen, dimensions):
         self.name = name
         self.type = type_of_creature
-
+        self.location = dimensions
         #the questions that each of the items require
-        self.q1 = None
-        self.q2 = None
-        self.q3 = None
+        self.questions = ['q1', 'q2', 'q3']
+        self.answers = [0,0,0]
         
         #opacity should be either 0, 1, 2, or 3, depending on how many questions the person has answered about the specific animal/plant
         self.opacity = 0 
 
-        #make clickable
+        self.location = False
+        self.draw_self(screen, name, dimensions)
+
+    def draw_self(self, screen, name, dimensions):
+        pygame.draw.circle(screen, GREEN, dimensions, 30, 0)
+        font = pygame.font.SysFont('timesnewroman', 10)
+        text = font.render( name, True, BLACK)
+        screen.blit(text, (int(dimensions[0]) - 10, int(dimensions[1]) -7))
 
     def update_opacity(self):
-        pass
+        self.opacity = sum(self.answers)
+        return self.opacity
+
+    def update_location(self, new_dimensions):
+        self.location = new_dimensions
+    def update_interest(self):
+        #call to user's db file to update interest for this ecology item. 
+        answered_questions = self.update_opacity()
+
+    def make_clickable(self):
+        if self.location == True:
+            #make clickable
+            pass
+
+    def ask_questions(self):
+        if pygame.event.get().type == MOUSEBUTTONUP:
+            self.draw_question_box(screen)
+
+    def get_questions(self):
+        #call db
+        for x in range(0,3):
+            self.questions.append(db.q1)
+
+    def draw_question_box(self, screen):
+        pygame.draw.rect(screen, GRAY, (200,30,500,160)) #location, size
+        font = pygame.font.SysFont('timesnewroman', 14)
+        text = font.render(str(self.name) +' questions: ', True, BLACK)
+        screen.blit(text, (210 , 40))
+        question_dimensions = [((210, 70, 450, 30), (220,80)), ((210, 110, 450, 30), (220, 120)), ((210, 150, 450, 30), (220, 160))]
+        ti.ask(screen, self.questions, question_dimensions) #location, size (left/right, up/down)
+
+        # txtbx = et.Input(maxlength=45, color=(255,0,0), prompt='q1: ')
+        # return txtbx
+
+
 
 
 

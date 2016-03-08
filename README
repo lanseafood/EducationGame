@@ -11,7 +11,10 @@ On your command prompt in the Education Game Directory:
 python Egame.py
 
 
-
+TO CALL ECOLOGY
+———————————
+#INSTANTIATE ECOLOGY IN GAME
+# self.ecology_1 = Ecology('lion', 'carnivore', self.screen, (300,40))
 
 
 
