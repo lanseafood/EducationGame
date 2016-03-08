@@ -11,11 +11,21 @@ On your command prompt in the Education Game Directory:
 python Egame.py
 
 
-TO CALL ECOLOGY
+ECOLOGY
 ———————————
-#INSTANTIATE ECOLOGY IN GAME
-# self.ecology_1 = Ecology('lion', 'carnivore', self.screen, (300,40))
+INSTANTIATE ECOLOGY IN GAME
+self.ecology_1 = Ecology('lion', 'carnivore', self.screen, (300,40))
 
+Get the location with
+ecology_1.get_location()
+
+Update the location when it’s moved with
+ecology_1.update_location()
+
+FOR DB
+I need a call to get the questions I can ask the user if they click on the item
+
+I need a way to edit the interest for the item in the DB once they’ve answered the question/s. 
 
 
 DATABASE API

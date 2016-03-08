@@ -183,6 +183,8 @@ class Ecology():
     def update_location(self, new_dimensions): #MUST BE A TUPLE
         self.location = new_dimensions
 
+    def get_location(self):
+        return self.location
 
     def update_interest(self):
         #call to user's db file to update interest for this ecology item. 
@@ -194,7 +196,6 @@ class Ecology():
             pass
 
     def ask_questions(self):
-
         if pygame.event.get().type == MOUSEBUTTONUP:
             self.draw_question_box(screen)
 
