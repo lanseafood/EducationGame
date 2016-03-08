@@ -1,7 +1,6 @@
 # THE DEFINITIONS OF OBJECTS IN THE GAME
 import sys, pygame, math, numpy, random, time, copy
 import text_input as ti
-import eztext as et
 from pygame.locals import * 
 
 #global definitions
@@ -181,8 +180,10 @@ class Ecology():
         self.opacity = sum(self.answers)
         return self.opacity
 
-    def update_location(self, new_dimensions):
+    def update_location(self, new_dimensions): #MUST BE A TUPLE
         self.location = new_dimensions
+
+
     def update_interest(self):
         #call to user's db file to update interest for this ecology item. 
         answered_questions = self.update_opacity()
@@ -193,6 +194,7 @@ class Ecology():
             pass
 
     def ask_questions(self):
+
         if pygame.event.get().type == MOUSEBUTTONUP:
             self.draw_question_box(screen)
 
