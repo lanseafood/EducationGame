@@ -12,26 +12,169 @@ python Egame.py
 
 
 ECOLOGY
-â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+———————————
 INSTANTIATE ECOLOGY IN GAME
 self.ecology_1 = Ecology('lion', 'carnivore', self.screen, (300,40))
 
 Get the location with
 ecology_1.get_location()
 
-Update the location when itâ€™s moved with
+Update the location when it’s moved with
 ecology_1.update_location()
 
 FOR DB
 I need a call to get the questions I can ask the user if they click on the item
 
-I need a way to edit the interest for the item in the DB once theyâ€™ve answered the question/s. 
+I need a way to edit the interest for the item in the DB once they’ve answered the question/s. 
+
+
+
 
 
 DATABASE API
 ____________
 
+AVAILABLE TABLES:
 
+Profiles - Holds the profile names and question and interest data for each user
+
+Questions - Holds the Question and Answer pairs, along with the ecology ID each question belongs to
+
+Ecology - Holds the ID, name, and tropic level for each species
+
+
+
+PROFILES TABLE METHODS:
+
+add_User(str name):
+
+Generates a new user profile and add their "name" and default starting data to the table.
+
+---
+
+get_Users():
+
+Returns a list of strings which contains the names of all users who have a profile within the database.
+
+---
+
+get_User_QData(str name):
+
+Returns a string containing the question data for the named user.
+
+---
+
+update_User_QData(str name, str data):
+
+Replaces the question data for the given user with the given data string.
+
+---
+
+get_User_Interests(str name):
+
+Returns a string containing the interest data for the named user.
+
+---
+
+update_User_Interests(str name, str data):
+
+Replaces the interest data for the given user with the given data string.
+
+---
+
+
+remove_User(str name):
+
+Removes the named user and their profile from the database.
+
+
+
+
+QUESTIONS TABLE METHODS:
+
+add_QA_Pair(int e_id, str question, str answer):
+
+Adds a given question and answer pair to the question pool under the given ecology ID.
+
+---
+
+print_QA_Pairs():
+
+Prints all stored questions, along with their answers. (Debug only)
+
+---
+
+get_QA_Pair(int rowid):
+
+Returns a question/answer tuple matching the given row/question number.
+
+---
+
+get_QAs(int e_id):
+
+Returns a list of all question/answer tuples belonging to the given ecology ID.
+
+---
+
+remove_QA_Pair(rowid):
+
+Removes the question/answer pair from the question pool at the given row.
+
+
+
+
+ECOLOGY TABLE METHODS:
+
+add_ecology(int id, str name, int tropic):
+
+Adds a new species to the ecology table.
+
+---
+
+get_ecology_id(str name):
+
+Returns the ID for a given species name.
+
+---
+
+get_ecology_name(int id):
+
+Returns the name of a species given its ID.
+
+---
+
+get_ecology_tropic(int id):
+
+Returns the tropic level of a species given its ID.
+
+---
+
+remove_ecology(int id):
+
+Removes a species from the table given its ID.
+
+---
+
+print_ecology():
+
+Prints a list of all species in the table. (Debug only)
+
+
+
+
+
+
+OTHER METHODS:
+
+commit_Changes():
+
+In order to save data in the tables to persist across multiple sessions, you MUST use this command to save any changes.
+
+---
+
+close_Database():
+
+Unneeded method, but acts as a safe way to close the database when exiting the game.
 
 
 
