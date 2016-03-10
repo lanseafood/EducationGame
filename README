@@ -1,4 +1,4 @@
-README FOR SAFARI WATSON
+README FOR SAFARI WATSON   
 
 IMPORTANT:
 Please always create your own branch or work on the same branch together for modular coding practice. We need to keep our master very clean in order to make sure we have as few conflicts as possible. Be sure to SYNC FIRST, then do pull requests when you want to merge your code into master. 
@@ -12,7 +12,7 @@ python Egame.py
 
 
 ECOLOGY
-———————————
+——————————E
 INSTANTIATE ECOLOGY IN GAME
 self.ecology_1 = Ecology('lion', 'carnivore', self.screen, (300,40))
 
