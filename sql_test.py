@@ -40,14 +40,16 @@ for qa in sql.get_QAs(1):
 	print "%d: %s\n\t%s" % (qa[0], qa[1], qa[2])
 
 # Fill ecology table
-sql.add_ecology(1, "lion", 3)
-sql.add_ecology(2, "vulture", 4)
-sql.add_ecology(3, "elephant", 2)
-sql.add_ecology(4, "giraffe", 2)
+sql.add_ecology(1, "Lion", 3)
+sql.add_ecology(2, "Vulture", 4)
+sql.add_ecology(3, "Elephant", 2)
+sql.add_ecology(4, "Giraffe", 2)
+sql.add_ecology(5, "Acacia", 1)
+sql.add_ecology(6, "Wildfruit", 1)
 
 # Print all stored ecologies
 print "\nQuery of all ecologies:"
 sql.print_ecology()
 
-# sql.commit_Changes()
+sql.commit_Changes()
 # sql.close_Database()
