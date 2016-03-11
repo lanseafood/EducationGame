@@ -15,12 +15,14 @@ import javax.swing.JPanel;
 public class FoodChainPanel extends JPanel {
 
 	List<String> ecology = new ArrayList<String>();
+	List<String> ecologyAnswers = new ArrayList<String>();
 	int[] xChain = {20, 120, 200, 200, 280, 280};
     int[] yChain = {75, 75, 25, 125, 25, 125};
     
     int[] xEcology = {400, 400, 400, 400, 400, 400, 400};
     int[] yEcology = {25, 100, 175, 250, 325, 400, 475};
     
+    Boolean[] drawCircle;
     private int width = 50;
     private int height = 50;
 
@@ -35,14 +37,24 @@ public class FoodChainPanel extends JPanel {
         public void mousePressed(MouseEvent m) {
             last = m.getPoint();
             //if == -1, then not dragging any circle
-            lastNumber = isInsideEllipse(last);
+            lastNumber = isInsideEllipse(last, xEcology, yEcology);
             dragging = lastNumber != -1;
         }
 
         @Override
         public void mouseReleased(MouseEvent m) {
-            last = null;
-            dragging = false;
+            //check if the moved circle overlaps a main circle
+        	if (lastNumber != -1) {
+        		Point newPoint = m.getPoint();
+        		int newNumber = isInsideEllipse(newPoint, xChain, yChain);
+        		if (newNumber != -1 && lastNumber == newNumber) {//ie, it has stopped inside a circle of the food chain
+        			ecologyAnswers.set(newNumber, ecology.get(newNumber));
+        			drawCircle[lastNumber] = false;
+        			for (int i = 0; i<ecologyAnswers.size(); i++) {
+        				System.out.println(ecologyAnswers.get(i));
+        			}
+        		}
+        	}
             repaint();
         }
 
@@ -62,17 +74,22 @@ public class FoodChainPanel extends JPanel {
 
     public FoodChainPanel(List<String> l) {
         ecology.addAll(l);
+        drawCircle = new Boolean[ecology.size()];
+        for (int i = 0; i < ecology.size(); i++) {
+        	ecologyAnswers.add("");
+        	drawCircle[i] = true;
+        }
     	setBackground(Color.WHITE);
         mouseDrag = new MouseDrag();
         addMouseListener(mouseDrag);
         addMouseMotionListener(mouseDrag);
     }
 
-    public int isInsideEllipse(Point point) {
+    public int isInsideEllipse(Point point, int[] xArray, int[] yArray) {
     	Boolean returnValue = false;
     	int circleNumber = -1;
-    	for (int i = 0; i < xEcology.length; i++) {
-    		if( new Ellipse2D.Float(xEcology[i], yEcology[i], width, height).contains(point))
+    	for (int i = 0; i < xArray.length; i++) {
+    		if( new Ellipse2D.Float(xArray[i], yArray[i], width, height).contains(point))
     			circleNumber = i;
     	}
     	return circleNumber;
@@ -85,12 +102,15 @@ public class FoodChainPanel extends JPanel {
         //draw the food chain
         for (int i = 0; i < ecology.size(); i++) {
         	g.drawOval(xChain[i], yChain[i], width, height);
+        	drawCenteredText(g, xChain[i]+(width/2), yChain[i]+(height/2), 10 , ecologyAnswers.get(i));
         }
         
         //draw the ecology options
         for (int i = 0; i < ecology.size(); i++) {
-        	g.drawOval(xEcology[i], yEcology[i], width, height);
-        	drawCenteredText(g, xEcology[i]+(width/2), yEcology[i]+(height/2), 10 , ecology.get(i));
+        	if (drawCircle[i]) {
+        		g.drawOval(xEcology[i], yEcology[i], width, height);
+        		drawCenteredText(g, xEcology[i]+(width/2), yEcology[i]+(height/2), 10 , ecology.get(i));
+        	}
         }
     }
     
