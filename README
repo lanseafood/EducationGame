@@ -44,46 +44,55 @@ Ecology - Holds the ID, name, and tropic level for each species
 
 
 
+New Class: Question(int question_id, int ecology_id,
+				String question, String answer)
+Methods:
+	public int get_Question_ID()
+	public int get_Ecology_ID()
+	public String get_Question()
+	public String get_Answer()
+
+
+
 PROFILES TABLE METHODS:
 
-add_User(str name):
+public void add_User(String name):
 
 Generates a new user profile and add their "name" and default starting data to the table.
 
 ---
 
-get_Users():
+public ArrayList<String> get_Users():
 
 Returns a list of strings which contains the names of all users who have a profile within the database.
 
 ---
 
-get_User_QData(str name):
+public String get_Question_Data(String name):
 
 Returns a string containing the question data for the named user.
 
 ---
 
-update_User_QData(str name, str data):
+public void set_Question_Data(String name, String data):
 
 Replaces the question data for the given user with the given data string.
 
 ---
 
-get_User_Interests(str name):
+publid String get_Interest_Data(String name):
 
 Returns a string containing the interest data for the named user.
 
 ---
 
-update_User_Interests(str name, str data):
+public void set_Interest_Data(String name, String data):
 
 Replaces the interest data for the given user with the given data string.
 
 ---
 
-
-remove_User(str name):
+public void remove_User(String name):
 
 Removes the named user and their profile from the database.
 
@@ -92,31 +101,31 @@ Removes the named user and their profile from the database.
 
 QUESTIONS TABLE METHODS:
 
-add_QA_Pair(int e_id, str question, str answer):
+public void add_QA(int ecology_id, String question, String answer):
 
 Adds a given question and answer pair to the question pool under the given ecology ID.
 
 ---
 
-print_QA_Pairs():
+public void print_QAs():
 
 Prints all stored questions, along with their answers. (Debug only)
 
 ---
 
-get_QA_Pair(int rowid):
+public Question get_QA(int rowid):
 
 Returns a question/answer tuple matching the given row/question number.
 
 ---
 
-get_QAs(int e_id):
+public ArrayList<Question> get_QAs(int ecology_id):
 
 Returns a list of all question/answer tuples belonging to the given ecology ID.
 
 ---
 
-remove_QA_Pair(rowid):
+public void remove_QA(int rowid):
 
 Removes the question/answer pair from the question pool at the given row.
 
@@ -125,57 +134,39 @@ Removes the question/answer pair from the question pool at the given row.
 
 ECOLOGY TABLE METHODS:
 
-add_ecology(int id, str name, int tropic):
+public void add_Ecology(int id, str name, int tropic):
 
 Adds a new species to the ecology table.
 
 ---
 
-get_ecology_id(str name):
+public int get_Ecology_ID(String name):
 
 Returns the ID for a given species name.
 
 ---
 
-get_ecology_name(int id):
+public String get_Ecology_Name(int id):
 
 Returns the name of a species given its ID.
 
 ---
 
-get_ecology_tropic(int id):
+public int get_Ecology_Tropic(int id):
 
 Returns the tropic level of a species given its ID.
 
 ---
 
-remove_ecology(int id):
+public void remove_Ecology(int id):
 
 Removes a species from the table given its ID.
 
 ---
 
-print_ecology():
+public void print_Ecology():
 
 Prints a list of all species in the table. (Debug only)
-
-
-
-
-
-
-OTHER METHODS:
-
-commit_Changes():
-
-In order to save data in the tables to persist across multiple sessions, you MUST use this command to save any changes.
-
----
-
-close_Database():
-
-Unneeded method, but acts as a safe way to close the database when exiting the game.
-
 
 
 
