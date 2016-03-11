@@ -1,7 +1,9 @@
 # THE DEFINITIONS OF OBJECTS IN THE GAME
 import sys, pygame, math, numpy, random, time, copy
 import text_input as ti
-from pygame.locals import * 
+from pygame.locals import *
+from sql import *
+from Buttons import *
 
 #global definitions
 WHITE = (255,255,255)
@@ -9,6 +11,7 @@ BLUE = (0,0,255)
 BLACK = (0,0,0)
 GRAY = (100,100,100)
 GREEN = ( 0, 255, 0)
+SKYBLUE = (78, 252, 240)
 
 #The game screen player will interaction with. Includes the game, the museum, the world, and ecology.
 class GameScreen():
@@ -18,14 +21,15 @@ class GameScreen():
         self.id = seed
         self.screen_dimensions = screen_dimensions
         self.world_dimensions = world_dimensions
-        self.world = SafariWorld() #hardcoded for now
-        self.museum = Museum()
-        self.watson = Watson()
 
         pygame.init()
         self.screen = pygame.display.set_mode(screen_dimensions)
         pygame.display.set_caption('SAFARI WATSON')
         self.screen.fill(WHITE)
+
+        self.world = SafariWorld(self.screen) #hardcoded for now
+        self.museum = Museum()
+        self.watson = Watson()
         
         self.world.draw(self.world_dimensions, self.screen)
         self.museum.draw(self.screen)
@@ -60,18 +64,38 @@ class GameScreen():
 #The drag and drop game
 class SafariWorld():
 
-    def __init__(self):
+    def __init__(self, screen):
         self.ecology_in_world = 0
         self.player = None
 
-        # load the picture of arrows with missing spaces for ecology
+        # load the food chain outline
+        self.foodChainPath = "images/FoodChain1.png"
+        self.foodChain = pygame.image.load(self.foodChainPath)
+        self.foodChain = pygame.transform.scale(self.foodChain, (570,300))
 
-        # load initial 3 ecology plants/animals 
+        self.screen = screen
+        self.ecologyItems = []
+
+
+        # load initial 3 ecology plants/animals
+        #query organisms from the database
+        #TODO: this will need to be changed to read the required IDs from the database
+        x = 750
+        y = 175
+        for i in xrange(1, 7):
+            name = get_ecology_name(i)
+            print "name = ", name
+            e = Ecology(name, self.screen, (x, y))
+            y += 75
+            self.ecologyItems.append(e)
+
+        #add text boxes:
+        ti.display_box(self.screen, "", (500,600, 300, 50), (500,600))
 
     def play(self):
         self.add_museum_token()
         pass
-        # allow player to drag and drop the 3 ecology animals and plants into proper places
+        # query the organisms from the database
 
         # have either autocheck or 'check' button
 
@@ -82,11 +106,14 @@ class SafariWorld():
         pass
 
     def draw(self, dimensions, screen):
-        pygame.draw.rect(screen, BLUE, dimensions)
+        '''pygame.draw.rect(screen, BLUE, dimensions)
 
         font = pygame.font.SysFont('timesnewroman', 14)
         text = font.render('Game Part: ', True, WHITE)
-        screen.blit(text, (700 // 2 , 700 // 2))
+        screen.blit(text, (700 // 2 , 700 // 2))'''
+
+        screen.blit(self.foodChain,(100,100))
+        pygame.display.flip()
 
 # -------------------------------------------------------------------------------------------------
 # WATSON
@@ -156,9 +183,9 @@ class Token():
 
 class Ecology():
 
-    def __init__(self, name, type_of_creature, screen, dimensions):
+    def __init__(self, name, screen, dimensions): #might want to add type_of_creature
         self.name = name
-        self.type = type_of_creature
+        #self.type = type_of_creature
         self.location = dimensions
         #the questions that each of the items require
         self.questions = ['q1', 'q2', 'q3']
@@ -171,10 +198,17 @@ class Ecology():
         self.draw_self(screen, name, dimensions)
 
     def draw_self(self, screen, name, dimensions):
-        pygame.draw.circle(screen, GREEN, dimensions, 30, 0)
-        font = pygame.font.SysFont('timesnewroman', 10)
+        circle = pygame.draw.circle(screen, GREEN, dimensions, 30, 0)
+        font = pygame.font.SysFont('timesnewroman', 12)
         text = font.render( name, True, BLACK)
-        screen.blit(text, (int(dimensions[0]) - 10, int(dimensions[1]) -7))
+
+        #centre the text in the circle:
+        textpos = text.get_rect()
+        textpos.centerx = circle.centerx
+        textpos.centery = circle.centery
+
+        screen.blit(text, textpos)
+        #screen.blit(text, (int(dimensions[0]) - 10, int(dimensions[1]) -7))
 
     def update_opacity(self):
         self.opacity = sum(self.answers)
