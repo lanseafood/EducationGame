@@ -24,7 +24,7 @@ public class SetupGame{
 	
 	public JPanel getQuestionPanel() {
 		JPanel panel = new JPanel();
-		JLabel l = new JLabel("Card2");
+		JLabel l = new JLabel("Museum Data");
 		panel.setLayout(new FlowLayout());
 		
 		panel.add(l);

@@ -40,11 +40,11 @@ public class GameScreen extends Container {
 		//add labels to each
 				
 		north.setLayout(new FlowLayout());//BoxLayout(north, BoxLayout.Y_AXIS));
-		JLabel labelNorth = new JLabel("North");
+		JLabel labelNorth = new JLabel("Hakuna Matata, Simba! Welcome Back!");
 		north.add(labelNorth);
 		
 		south.setLayout(new FlowLayout());//BoxLayout(south, BoxLayout.Y_AXIS));
-		JLabel labelSouth = new JLabel("South");
+		JLabel labelSouth = new JLabel("WATSON TOOLBAR");
 		south.add(labelSouth);
 		
 		
@@ -58,7 +58,7 @@ public class GameScreen extends Container {
 		center.add(card2, "2");
 		card1.setVisible(true);
 		
-		JButton btn1 = new JButton("Show Card 2");
+		JButton btn1 = new JButton("Show Museum");
         btn1.addActionListener(new ActionListener() {
 
 			@Override
@@ -67,18 +67,18 @@ public class GameScreen extends Container {
 					card2.setVisible(true);
 					card1.setVisible(false);
 					card1Showing = false;
-					btn1.setText("Show Card 1");
+					btn1.setText("Hide Museum");
 				}
 				else {
 					card2.setVisible(false);
 					card1.setVisible(true);
 					card1Showing = true;
-					btn1.setText("Show Card 2");
+					btn1.setText("Show Museum");
 				}
 			}
         });
         
-        south.add(btn1);
+        north.add(btn1);
 		//center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
 		//JLabel labelCenter = new JLabel("Center");
 		//center.add(labelCenter);

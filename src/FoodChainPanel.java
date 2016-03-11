@@ -21,6 +21,7 @@ public class FoodChainPanel extends JPanel {
     
     int[] xEcology = {400, 400, 400, 400, 400, 400, 400};
     int[] yEcology = {25, 100, 175, 250, 325, 400, 475};
+    int trophic = 4;
     
     Boolean[] drawCircle;
     private int width = 50;
@@ -98,11 +99,25 @@ public class FoodChainPanel extends JPanel {
     @Override
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        drawCenteredText(g, getWidth()/2, 500, 20 , "Drag and drop organisms to their correct trophic levels!");
         
         //draw the food chain
         for (int i = 0; i < ecology.size(); i++) {
         	g.drawOval(xChain[i], yChain[i], width, height);
         	drawCenteredText(g, xChain[i]+(width/2), yChain[i]+(height/2), 10 , ecologyAnswers.get(i));
+        	
+        	if (i == 0) {
+        		drawCenteredText(g, xChain[i]+(width/2), 200, 10 , Integer.toString(trophic));
+        		trophic--;
+        		if (trophic == 0)
+        			trophic = 4;
+        	}
+        	if (i != 0 && xChain[i] != xChain[i-1]) {
+        		drawCenteredText(g, xChain[i]+(width/2), 200, 10 , Integer.toString(trophic));
+        		trophic--;
+        		if (trophic == 0)
+        			trophic = 4;
+        	}
         }
         
         //draw the ecology options
