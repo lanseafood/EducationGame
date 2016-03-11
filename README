@@ -1,0 +1,154 @@
+README FOR SAFARI WATSON
+
+
+IMPORTANT:
+Please always create your own branch or work on the same branch together for modular coding practice. We need to keep our master very clean in order to make sure we have as few conflicts as possible. Be sure to SYNC FIRST, then do pull requests when you want to merge your code into master. 
+
+
+TO RUN
+------------
+Open the project on Eclipse (Import from existing project). Run as an application, not an applet.
+
+
+
+DATABASE API
+____________
+
+AVAILABLE TABLES:
+
+Profiles - Holds the profile names and question and interest data for each user
+
+Questions - Holds the Question and Answer pairs, along with the ecology ID each question belongs to
+
+Ecology - Holds the ID, name, and tropic level for each species
+
+
+
+New Class: Question(int question_id, int ecology_id,
+				String question, String answer)
+Methods:
+	public int get_Question_ID()
+	public int get_Ecology_ID()
+	public String get_Question()
+	public String get_Answer()
+
+
+
+PROFILES TABLE METHODS:
+
+public void add_User(String name):
+
+Generates a new user profile and add their "name" and default starting data to the table.
+
+---
+
+public ArrayList<String> get_Users():
+
+Returns a list of strings which contains the names of all users who have a profile within the database.
+
+---
+
+public String get_Question_Data(String name):
+
+Returns a string containing the question data for the named user.
+
+---
+
+public void set_Question_Data(String name, String data):
+
+Replaces the question data for the given user with the given data string.
+
+---
+
+publid String get_Interest_Data(String name):
+
+Returns a string containing the interest data for the named user.
+
+---
+
+public void set_Interest_Data(String name, String data):
+
+Replaces the interest data for the given user with the given data string.
+
+---
+
+public void remove_User(String name):
+
+Removes the named user and their profile from the database.
+
+
+
+
+QUESTIONS TABLE METHODS:
+
+public void add_QA(int ecology_id, String question, String answer):
+
+Adds a given question and answer pair to the question pool under the given ecology ID.
+
+---
+
+public void print_QAs():
+
+Prints all stored questions, along with their answers. (Debug only)
+
+---
+
+public Question get_QA(int rowid):
+
+Returns a question/answer tuple matching the given row/question number.
+
+---
+
+public ArrayList<Question> get_QAs(int ecology_id):
+
+Returns a list of all question/answer tuples belonging to the given ecology ID.
+
+---
+
+public void remove_QA(int rowid):
+
+Removes the question/answer pair from the question pool at the given row.
+
+
+
+
+ECOLOGY TABLE METHODS:
+
+public void add_Ecology(int id, str name, int tropic):
+
+Adds a new species to the ecology table.
+
+---
+
+public int get_Ecology_ID(String name):
+
+Returns the ID for a given species name.
+
+---
+
+public String get_Ecology_Name(int id):
+
+Returns the name of a species given its ID.
+
+---
+
+public int get_Ecology_Tropic(int id):
+
+Returns the tropic level of a species given its ID.
+
+---
+
+public void remove_Ecology(int id):
+
+Removes a species from the table given its ID.
+
+---
+
+public void print_Ecology():
+
+Prints a list of all species in the table. (Debug only)
+
+
+
+USEFUL WATSON API
+-------------
