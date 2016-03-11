@@ -45,8 +45,20 @@ public class GameScreen extends Container {
 		
 		south.setLayout(new FlowLayout());//BoxLayout(south, BoxLayout.Y_AXIS));
 		JLabel labelSouth = new JLabel("WATSON TOOLBAR");
-		south.add(labelSouth);
+		JButton firstButton = new JButton("Ask Watson!");
+		firstButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				WatsonPopUp dialog = new WatsonPopUp();
+				dialog.setVisible(true);
+				
+			}
+			
+		});
 		
+		south.add(labelSouth);
+		south.add(firstButton);
 		
 		//set the card layout
 		SetupGame sg = new SetupGame();
