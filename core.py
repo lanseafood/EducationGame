@@ -3,6 +3,7 @@ import sys, pygame, math, numpy, random, time, copy
 import text_input as ti
 from pygame.locals import *
 from sql import *
+from Buttons import *
 
 #global definitions
 WHITE = (255,255,255)
@@ -87,6 +88,9 @@ class SafariWorld():
             e = Ecology(name, self.screen, (x, y))
             y += 75
             self.ecologyItems.append(e)
+
+        #add text boxes:
+        ti.display_box(self.screen, "", (500,600, 300, 50), (500,600))
 
     def play(self):
         self.add_museum_token()
