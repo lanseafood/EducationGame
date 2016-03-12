@@ -7,7 +7,7 @@ Please always create your own branch or work on the same branch together for mod
 
 TO RUN
 ------------
-Open the project on Eclipse (Import from existing project). Make sure that your classpath includes all of the JAR files included in the /Lib folder. 
+Open the project on Eclipse (Import from existing project). Make sure that your classpath includes all of the JAR files included in the /Lib folder. (In Eclipse, this means going to Build Path -> Libraries -> Add External JARs and then selecting all of the JAR files in the Lib folder.)
 
 Run as an application, not an applet.
 
