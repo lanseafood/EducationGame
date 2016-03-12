@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Base64;
+import java.util.Iterator;
+import java.util.stream.IntStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -69,7 +71,26 @@ public class WatsonAPI {
             JsonArray evidences = obj.getAsJsonObject("question").getAsJsonArray("evidencelist");
             JsonPrimitive firstAnswer = evidences.get(0).getAsJsonObject().getAsJsonPrimitive("text");
             String ans = firstAnswer.toString();
-            return ans;
+            
+            int i = 0;
+            int size = ans.length();
+            int counter = 0;
+            String newString = "";
+            int threshold = 30;
+            while (i < size){
+            	newString += ans.charAt(i);
+            	counter++;
+            	if (counter > threshold && ans.charAt(i) == ' '){
+            		//System.out.println("here");
+            		counter = 0;
+            		//newString += "\n";
+            	}
+            	i++;
+            	
+            }
+            
+            
+            return newString;
             
         }
         

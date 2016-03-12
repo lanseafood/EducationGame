@@ -1,15 +1,14 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
@@ -54,10 +53,15 @@ public class WatsonPopUp extends JDialog{
 		rightLayout.setVgap(15);
 		right.setLayout(rightLayout);
 		
-		final JTextField questionField = new JTextField(50);
-		final JTextField answerField = new JTextField(50);
 		
-	
+		
+		final JTextField questionField = new JTextField(30);
+		final JTextArea answerField = new JTextArea(5, 30);
+		
+		final JScrollPane pane = new JScrollPane(answerField);
+		answerField.setEditable(false);
+		answerField.setLineWrap(true);
+		answerField.setWrapStyleWord(true);
 		final WatsonPopUp d = this;
 		
 		firstButton.addActionListener(new ActionListener(){
@@ -106,7 +110,7 @@ public class WatsonPopUp extends JDialog{
 		
 		
 		right.add(questionField);
-		right.add(answerField);
+		right.add(pane);
 		
 		top.add(left);
 		top.add(right);
