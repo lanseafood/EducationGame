@@ -7,7 +7,11 @@ Please always create your own branch or work on the same branch together for mod
 
 TO RUN
 ------------
-Open the project on Eclipse (Import from existing project). Run as an application, not an applet.
+Open the project on Eclipse (Import from existing project). Make sure that your classpath includes all of the JAR files included in the /Lib folder. 
+
+Run as an application, not an applet.
+
+Alternatively, run the executable JAR file WatsonGame.jar in /bin for a demo. 
 
 
 
@@ -84,7 +88,7 @@ QUESTIONS TABLE METHODS:
 public void add_QA(int ecology_id, String question, String answer):
 
 Adds a given question and answer pair to the question pool under the given ecology ID.
-
+-
 ---
 
 public void print_QAs():
@@ -152,3 +156,7 @@ Prints a list of all species in the table. (Debug only)
 
 USEFUL WATSON API
 -------------
+
+public String askWatson(String query):
+
+Returns the first answer supplied by Watson to the given query. 
