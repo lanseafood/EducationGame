@@ -2,5 +2,17 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/fluent-hc-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/gson-2.6.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/httpclient-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/httpclient-cache-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/httpclient-win-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/httpcore-4.4.4.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/httpmime-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="/Users/shrutan/Documents/Academics/2nd Sem/Computational Creativity/SafariWatson/EducationGame/Lib/sqlite-jdbc-3.8.11.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
