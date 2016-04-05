@@ -1,7 +1,9 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
@@ -25,10 +27,7 @@ public class PyramidPanel extends JPanel {
     int[] xEcology = {400, 400, 400, 400, 400, 400, 400};
     int[] yEcology = {25, 100, 175, 250, 325, 400, 475};
     
-    
-    
-    
-    
+    PyramidMasterPanel parent; 
     Boolean[] drawCircle;
     private int width = 50;
     private int height = 50;
@@ -49,6 +48,13 @@ public class PyramidPanel extends JPanel {
             	dragging = lastNumber != -1;
             } else {
             	dragging = false;
+            	
+            	// This animal is ready to have questions answered for it 
+            	if (lastNumber != -1){
+            		String animal = ecology.get(lastNumber);
+            		parent.produceQuestionPanel(animal);
+            		
+            	}
             }
         }
 
@@ -81,8 +87,9 @@ public class PyramidPanel extends JPanel {
     }
 
 
-    public PyramidPanel(List<String> l) {
-    	
+    public PyramidPanel(String username, List<String> l, PyramidMasterPanel parent) {
+
+    	this.parent = parent;
     	
     	Point[] poly1 = {new Point(50, 400), new Point(350, 400), new Point(300, 300), new Point(100, 300)};
     	Polygon p1 = new Polygon();
