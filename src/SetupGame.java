@@ -15,7 +15,7 @@ public class SetupGame{
 	List<String> ecology = new ArrayList<String>();
 	public JPanel getFoodChainPanel() {
 		//TODO: change this to read from database
-		ecology = Arrays.asList("Vulture", "Lion", "Elephant", "Giraffe", "Acacia", "WildFruit");
+		ecology = Arrays.asList("King Vulture", "Lion", "Elephant", "Giraffe", "Acacia", "Baobab");
 		
 		JPanel panel = new PyramidPanel(ecology); //JPanel();
 		

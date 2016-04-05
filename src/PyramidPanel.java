@@ -7,9 +7,11 @@ import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -22,9 +24,7 @@ public class PyramidPanel extends JPanel {
     
     int[] xEcology = {400, 400, 400, 400, 400, 400, 400};
     int[] yEcology = {25, 100, 175, 250, 325, 400, 475};
-    int trophic = 4;
     
-    HashMap<String, Integer> trophicLevel = new HashMap<String, Integer>();
     
     
     
@@ -45,21 +45,23 @@ public class PyramidPanel extends JPanel {
             last = m.getPoint();
             //if == -1, then not dragging any circle
             lastNumber = isInsideEllipse(last, xEcology, yEcology);
-            dragging = lastNumber != -1;
+            if (lastNumber != -1 && drawCircle[lastNumber]){
+            	dragging = lastNumber != -1;
+            } else {
+            	dragging = false;
+            }
         }
 
         @Override
         public void mouseReleased(MouseEvent m) {
             //check if the moved circle overlaps a main circle
-        	if (lastNumber != -1) {
+        	if (lastNumber != -1 && dragging != false) {
         		Point newPoint = m.getPoint();
         		int newNumber = isInsideShape(newPoint);
-        		if (newNumber != -1 && lastNumber == newNumber) {//ie, it has stopped inside a circle of the food chain
+        		if (newNumber != -1 && ellipseTrophicLevel(lastNumber) == newNumber) {//ie, it has stopped inside a circle of the food chain
         			ecologyAnswers.set(newNumber, ecology.get(newNumber));
         			drawCircle[lastNumber] = false;
-        			for (int i = 0; i<ecologyAnswers.size(); i++) {
-        				System.out.println(ecologyAnswers.get(i));
-        			}
+        			System.out.println(ecology.get(lastNumber));
         		}
         	}
             repaint();
@@ -101,7 +103,7 @@ public class PyramidPanel extends JPanel {
     	}
     	
     	
-    	Point[] poly3 = {new Point(150, 200), new Point(250, 200), new Point(200, 100), new Point(200, 100)};
+    	Point[] poly3 = {new Point(150, 200), new Point(250, 200), new Point(200, 100)};
     	Polygon p3 = new Polygon();
     	j = 0;
     	while (j < poly3.length){
@@ -122,8 +124,10 @@ public class PyramidPanel extends JPanel {
     	pyramids.add(p2);
     	pyramids.add(p3);
     	
+    	
+    	long seed = System.nanoTime();
+    	Collections.shuffle(l, new Random(seed));
         ecology.addAll(l);
-        trophicLevel.put("Lion", 1);
         
         drawCircle = new Boolean[ecology.size()];
         for (int i = 0; i < ecology.size(); i++) {
@@ -137,11 +141,11 @@ public class PyramidPanel extends JPanel {
     }
 
     public int isInsideShape(Point point) {
-    	System.out.println(point);
+    	//System.out.println(point);
     	int shapeNumber = -1;
     	for (int i = 0; i < pyramids.size(); i++) {
     		if(pyramids.get(i).contains(point)){
-    			shapeNumber = i;
+    			shapeNumber = i + 1;
     			//System.out.println(shapeNumber);	
     		}
     		
@@ -158,6 +162,25 @@ public class PyramidPanel extends JPanel {
     	}
     	return circleNumber;
     }
+    
+    public int ellipseTrophicLevel(int i) {
+    	
+    	int circleNumber = -1;
+    	
+    	String animalName = ecology.get(i);
+    	SQLiteJDBC db = new SQLiteJDBC();
+    	try {
+    		//db.print_Ecology();
+			int id = db.get_Ecology_ID(animalName);
+			circleNumber = db.get_Ecology_Tropic(id);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				}
+    			
+    		
+    	return circleNumber;
+    }
 
     @Override
 	public void paintComponent(Graphics g) {
@@ -171,17 +194,20 @@ public class PyramidPanel extends JPanel {
         
         for (int i = 0; i < length; ++i){
         	g.drawPolygon(pyramids.get(i));
-        	drawCenteredText(g, pyramids.get(i).getBounds().x + pyramids.get(i).getBounds().width/2, pyramids.get(i).getBounds().y + pyramids.get(i).getBounds().height/2, 10, "" + i);
+        	drawCenteredText(g, pyramids.get(i).getBounds().x + pyramids.get(i).getBounds().width/2, pyramids.get(i).getBounds().y + pyramids.get(i).getBounds().height/2, 10, "" + (i + 1));
         	
         }
         
         
         //draw the ecology options
         for (int i = 0; i < ecology.size(); i++) {
-        	if (drawCircle[i]) {
-        		g.drawOval(xEcology[i], yEcology[i], width, height);
-        		drawCenteredText(g, xEcology[i]+(width/2), yEcology[i]+(height/2), 10 , ecology.get(i));
+        	if (!drawCircle[i]){
+        		g.setColor(Color.GREEN);
         	}
+        	g.drawOval(xEcology[i], yEcology[i], width, height);
+        	drawCenteredText(g, xEcology[i]+(width/2), yEcology[i]+(height/2), 10 , ecology.get(i));
+        	g.setColor(Color.BLACK);
+        	
         }
     }
     
