@@ -3,7 +3,7 @@ import java.sql.*;
 
 public class SQLiteJDBC
 {
-  /* Private global varaible for DB connection */
+  /* Private global variable for DB connection */
   private Connection c;
   
   /* Constructor for access, update, and use of the DB */
@@ -40,7 +40,12 @@ public class SQLiteJDBC
 		"ID INT PRIMARY KEY NOT NULL, " +
 		"NAME VARCHAR(32) NOT NULL, " + 
 		"TROPIC INT NOT NULL)";
-	stmt.executeUpdate(sql);	
+	stmt.executeUpdate(sql);
+	sql =
+		"CREATE TABLE IF NOT EXISTS TITLES (" +
+		"ID INT PRIMARY KEY NOT NULL, " +
+		"TITLE VARCHAR(64) NOT NULL)";
+	stmt.executeUpdate(sql);
 	stmt.close();
   }
   
@@ -49,7 +54,8 @@ public class SQLiteJDBC
 	Statement stmt = c.createStatement();
 	stmt.executeUpdate("DELETE FROM PROFILES;");
 	stmt.executeUpdate("DELETE FROM QUESTIONS;");
-	stmt.executeUpdate("DELETE FROM ECOLOGY;");	
+	stmt.executeUpdate("DELETE FROM ECOLOGY;");
+	stmt.executeUpdate("DELETE FROM TITLES;");	
 	stmt.close();
   }
   
@@ -305,6 +311,44 @@ public class SQLiteJDBC
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"DELETE FROM ECOLOGY " +
+		"WHERE ID=%d;", id);
+	stmt.executeUpdate(sql);
+	stmt.close();
+  }
+  
+  
+  
+  /* // TITLE Table Methods // */
+  
+  /* Add a new title to the table */
+  public void add_Title(int id, String name) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"INSERT INTO TITLES " +
+		"VALUES (%d, '%s');", id, name);
+	stmt.executeUpdate(sql);
+	stmt.close();
+  }
+  
+  /* Fetches a title by its id in the table */
+  public String get_Title(int id) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"SELECT NAME FROM TITLES " +
+		"WHERE ID=%d;", id);
+	ResultSet rs = stmt.executeQuery(sql);
+	rs.next();
+	String out = rs.getString("name");
+	rs.close();
+	stmt.close();
+	return out;
+  }
+  
+  /* Remove a title from the table */
+  public void remove_Title(int id) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"DELETE FROM TITLES " +
 		"WHERE ID=%d;", id);
 	stmt.executeUpdate(sql);
 	stmt.close();
