@@ -83,6 +83,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 			titles.addActionListener(this);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			titles.removeAllItems();
 			titles.addItem("Error");
 			e.printStackTrace();
 		}
