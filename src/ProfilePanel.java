@@ -78,14 +78,14 @@ public class ProfilePanel extends JPanel implements ActionListener {
 			
 			// Set selected title to current title
 			titles.setSelectedItem(currentTitle);
+			
+			// Set up event listener
+			titles.addActionListener(this);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			titles.addItem("Error");
 			e.printStackTrace();
 		}
-		
-		// Set up event listener
-		titles.addActionListener(this);
 		
 		// Draw panel
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
