@@ -54,6 +54,14 @@ public class PyramidPanel extends JPanel {
             last = m.getPoint();
             //if == -1, then not dragging any circle
             lastAnimal = isInsideEllipse(last);
+            
+            // Check if in trophic thingy
+            if (lastAnimal.equals("")){
+            	int trophic = isInsideShape(last);
+            	parent.produceTrophicMemberPanel(trophic);
+            }
+            
+            
             if (!lastAnimal.equals("") && moveCircle.get(lastAnimal)){
             	dragging = lastAnimal != "";
             } else {
@@ -77,6 +85,8 @@ public class PyramidPanel extends JPanel {
         			//ecologyAnswers.set(newNumber, ecology.get(newNumber));
         			moveCircle.put(lastAnimal, false);
         			System.out.println(lastAnimal + " is in correct spot!");
+        			
+        			parent.correctlyPlacedAnimals.add(lastAnimal);
         			
         			int randomIndex = (int) Math.floor(allAnimalNames.size() * Math.random());
         			

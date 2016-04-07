@@ -1,15 +1,20 @@
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
-import javax.swing.*;
 
 public class CoreClass {
 	private static void createAndShowGUI() {
         JFrame frame = new JFrame("Safari Watson");
-        frame.setSize(700, 700);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize(screenSize.width - 200, screenSize.height - 200);
         frame.setContentPane(new GameScreen());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //frame.pack();
         frame.setLocationByPlatform(true);
+        
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
