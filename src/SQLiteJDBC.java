@@ -17,7 +17,7 @@ public class SQLiteJDBC
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
       System.exit(0);
     }
-    System.out.println("Opened database successfully");
+    //System.out.println("Opened database successfully");
   }
   
   /* Private method for creating the tables if they do not exist (clean build) */
@@ -304,6 +304,20 @@ public class SQLiteJDBC
 	}
 	rs.close();
 	stmt.close();
+  }
+  
+  /* Returns an arraylist of all animal names in the db.*/
+  public ArrayList<String> retrieve_Ecology() throws SQLException {
+	Statement stmt = c.createStatement();
+	ResultSet rs = stmt.executeQuery("SELECT * FROM ECOLOGY;");
+	ArrayList<String> ans = new ArrayList<String>();
+	while (rs.next()) {		
+		String name = rs.getString("name");
+		ans.add(name);
+	}
+	rs.close();
+	stmt.close();
+	return ans;
   }
   
   /* Remove a question/answer pair from the table */

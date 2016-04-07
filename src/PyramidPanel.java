@@ -1,58 +1,67 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.LayoutManager;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class PyramidPanel extends JPanel {
-
-	List<String> ecology = new ArrayList<String>();
-	List<String> ecologyAnswers = new ArrayList<String>();
+	
+	ArrayList<String> allAnimalNames;
     
     ArrayList<Polygon> pyramids = new ArrayList<Polygon>();
     
-    int[] xEcology = {400, 400, 400, 400, 400, 400, 400};
-    int[] yEcology = {25, 100, 175, 250, 325, 400, 475};
+    HashMap<String, Point> ellipsePoints;
+    
+    Point[] startingPoints;
     
     PyramidMasterPanel parent; 
-    Boolean[] drawCircle;
-    private int width = 50;
-    private int height = 50;
+    HashMap<String, Boolean> moveCircle;
+    HashMap<String, Point> originalLocations;
+    
+    private int width = 75;
+    private int height = 75;
 
     private MouseDrag mouseDrag;
+    
+    
+    HashMap<String, Image> animalImages;
+    
     
     private final class MouseDrag extends MouseAdapter {
         private boolean dragging = false;
         private Point last;
-        private int lastNumber = -1;
+        private String lastAnimal = "";
 
         @Override
         public void mousePressed(MouseEvent m) {
             last = m.getPoint();
             //if == -1, then not dragging any circle
-            lastNumber = isInsideEllipse(last, xEcology, yEcology);
-            if (lastNumber != -1 && drawCircle[lastNumber]){
-            	dragging = lastNumber != -1;
+            lastAnimal = isInsideEllipse(last);
+            if (!lastAnimal.equals("") && moveCircle.get(lastAnimal)){
+            	dragging = lastAnimal != "";
             } else {
             	dragging = false;
             	
             	// This animal is ready to have questions answered for it 
-            	if (lastNumber != -1){
-            		String animal = ecology.get(lastNumber);
-            		parent.produceQuestionPanel(animal);
+            	if (!lastAnimal.equals("")){
+            		parent.produceQuestionPanel(lastAnimal);
             		
             	}
             }
@@ -61,13 +70,28 @@ public class PyramidPanel extends JPanel {
         @Override
         public void mouseReleased(MouseEvent m) {
             //check if the moved circle overlaps a main circle
-        	if (lastNumber != -1 && dragging != false) {
+        	if (!lastAnimal.equals("") && dragging != false) {
         		Point newPoint = m.getPoint();
         		int newNumber = isInsideShape(newPoint);
-        		if (newNumber != -1 && ellipseTrophicLevel(lastNumber) == newNumber) {//ie, it has stopped inside a circle of the food chain
-        			ecologyAnswers.set(newNumber, ecology.get(newNumber));
-        			drawCircle[lastNumber] = false;
-        			System.out.println(ecology.get(lastNumber));
+        		if (newNumber != -1 && ellipseTrophicLevel(lastAnimal) == newNumber) {//ie, it has stopped inside a circle of the food chain
+        			//ecologyAnswers.set(newNumber, ecology.get(newNumber));
+        			moveCircle.put(lastAnimal, false);
+        			System.out.println(lastAnimal + " is in correct spot!");
+        			
+        			int randomIndex = (int) Math.floor(allAnimalNames.size() * Math.random());
+        			
+        			if (allAnimalNames.size() != 0){
+        				String newAnimal = allAnimalNames.get(randomIndex);
+        				System.out.println(newAnimal + " added!");
+        				Point oldPoint = originalLocations.get(lastAnimal);
+        				ellipsePoints.put(newAnimal, oldPoint);
+        				originalLocations.put(newAnimal, oldPoint);
+        				allAnimalNames.remove(newAnimal);
+        				moveCircle.put(newAnimal, true);
+        				
+        			}
+        			
+        			
         		}
         	}
             repaint();
@@ -75,10 +99,10 @@ public class PyramidPanel extends JPanel {
 
         @Override
         public void mouseDragged(MouseEvent m) {
-        	if (lastNumber != -1) {
+        	if (!lastAnimal.equals("")) {
 	            if (dragging) {
-	                xEcology[lastNumber] = m.getX();
-	                yEcology[lastNumber] = m.getY();
+	            	Point newP = new Point(m.getX(), m.getY());
+	                ellipsePoints.put(lastAnimal, newP);
 	            } 
 	            last = m.getPoint();
         	}
@@ -89,7 +113,46 @@ public class PyramidPanel extends JPanel {
 
     public PyramidPanel(String username, List<String> l, PyramidMasterPanel parent) {
 
+    	originalLocations = new HashMap<String, Point>();
+    	animalImages = new HashMap<String, Image>();
+    	
+    	SQLiteJDBC db = new SQLiteJDBC();
+    	try {
+			allAnimalNames = db.retrieve_Ecology();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			allAnimalNames = new ArrayList<String>();
+		}
+    	
+    	Iterator<String> iter1 = allAnimalNames.iterator();
+    	while (iter1.hasNext()){
+    		String animalName = iter1.next();
+        	Image image;
+        	try {
+				image = ImageIO.read(new File("assets/" + animalName.toLowerCase() + ".png"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				image = null;
+			}
+        	
+    		animalImages.put(animalName, image);
+    	}
+    	
+    	
+    	
+    	
+    	
     	this.parent = parent;
+    	
+    	ellipsePoints = new HashMap<String, Point>();
+    	startingPoints = new Point[7];
+    	startingPoints[0] = new Point(400, 25);
+    	startingPoints[1] = new Point(400, 100);
+    	startingPoints[2] = new Point(400, 175);
+    	startingPoints[3] = new Point(400, 250);
+    	startingPoints[4] = new Point(400, 325);
+    	startingPoints[5] = new Point(400, 400);
+    	startingPoints[6] = new Point(400, 475);
     	
     	Point[] poly1 = {new Point(50, 400), new Point(350, 400), new Point(300, 300), new Point(100, 300)};
     	Polygon p1 = new Polygon();
@@ -134,13 +197,25 @@ public class PyramidPanel extends JPanel {
     	
     	long seed = System.nanoTime();
     	Collections.shuffle(l, new Random(seed));
-        ecology.addAll(l);
         
-        drawCircle = new Boolean[ecology.size()];
-        for (int i = 0; i < ecology.size(); i++) {
-        	ecologyAnswers.add("");
-        	drawCircle[i] = true;
+        moveCircle = new HashMap<String, Boolean>();
+        for (int i = 0; i < l.size(); i++) {
+        	
+        	ellipsePoints.put(l.get(i), startingPoints[i]);
+        	originalLocations.put(l.get(i), startingPoints[i]);
+        	moveCircle.put(l.get(i), true);
+        	
+        	allAnimalNames.remove(l.get(i));
+        	
+
+        	
+        	
         }
+        
+        
+        
+        
+        
     	setBackground(Color.WHITE);
         mouseDrag = new MouseDrag();
         addMouseListener(mouseDrag);
@@ -160,21 +235,25 @@ public class PyramidPanel extends JPanel {
     	return shapeNumber;
     }
     
-    public int isInsideEllipse(Point point, int[] xArray, int[] yArray) {
+    public String isInsideEllipse(Point point) {
     	
-    	int circleNumber = -1;
-    	for (int i = 0; i < xArray.length; i++) {
-    		if( new Ellipse2D.Float(xArray[i], yArray[i], width, height).contains(point))
-    			circleNumber = i;
+    	String circleName = "";
+    	
+    	Iterator<String> iter = ellipsePoints.keySet().iterator();
+    	while (iter.hasNext()) {
+    		String name = iter.next();
+    		Point p = ellipsePoints.get(name);
+    		if( new Ellipse2D.Float(p.x, p.y, width, height).contains(point))
+    			circleName = name;
     	}
-    	return circleNumber;
+    	return circleName;
     }
     
-    public int ellipseTrophicLevel(int i) {
+    public int ellipseTrophicLevel(String name) {
     	
     	int circleNumber = -1;
     	
-    	String animalName = ecology.get(i);
+    	String animalName = name;
     	SQLiteJDBC db = new SQLiteJDBC();
     	try {
     		//db.print_Ecology();
@@ -207,12 +286,28 @@ public class PyramidPanel extends JPanel {
         
         
         //draw the ecology options
-        for (int i = 0; i < ecology.size(); i++) {
-        	if (!drawCircle[i]){
+        Iterator<String> iter = moveCircle.keySet().iterator();
+        while (iter.hasNext()) {
+        	String name = iter.next();
+        	if (!moveCircle.get(name)){
         		g.setColor(Color.GREEN);
         	}
-        	g.drawOval(xEcology[i], yEcology[i], width, height);
-        	drawCenteredText(g, xEcology[i]+(width/2), yEcology[i]+(height/2), 10 , ecology.get(i));
+        	Point p = ellipsePoints.get(name);
+        	if (p != null){
+        		g.drawOval((int) p.getX(), (int) p.getY(), width, height);
+        		
+        		if (animalImages.get(name) != null){
+            		g.drawImage(animalImages.get(name), (int) p.getX(), (int) p.getY(), width, height, null);
+            	}
+            	else {
+            		drawCenteredText(g, (int) p.getX() +(width/2), (int) p.getY() +(height/2), 10 , name);
+            	}
+        	}
+        	
+        	
+        	
+        	
+        	
         	g.setColor(Color.BLACK);
         	
         }

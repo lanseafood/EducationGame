@@ -26,8 +26,10 @@ public class SetupGame{
 		JPanel panel = new JPanel();
 		JLabel l = new JLabel("Museum Data");
 		panel.setLayout(new FlowLayout());
+		//ProfilePanel profPanel = new ProfilePanel("Simba", null, null);
 		
 		panel.add(l);
+		//panel.add(profPanel);
 		return panel;
 	}
 	
