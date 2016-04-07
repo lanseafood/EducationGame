@@ -106,6 +106,32 @@ public class PopulateDatabase
 		db.add_QA(14, "What family does the river bushwillow belong to?", "Combretum");
 		db.add_QA(14, "What special type of root system does the bushwillow have?", "Hydrophilic");
 				
+		
+		//add titles:
+		db.add_Title(1, "The Culture Vulture");
+		db.add_Title(2, "The Eagle Eye");
+		
+		db.add_Title(3, "The Lion King");
+		db.add_Title(4, "Flamin Hot Cheeto");
+		db.add_Title(5, "Tigger");
+		db.add_Title(6, "Joker");
+		
+		db.add_Title(7, "Dumbo");
+		db.add_Title(8, "Melman");
+		db.add_Title(9, "The Leaping Antelope");
+		db.add_Title(10, "Master Thundering Rhino");
+		
+		db.add_Title(11, "The Acacia Accolade");
+		db.add_Title(12, "Master of the Grass");
+		db.add_Title(13, "The Baobab Baboon");
+		db.add_Title(14, "The Whomping Rhino");
+		
+		db.add_Title(-1, "N00b");
+		db.add_Title(-2, "Novice");
+		db.add_Title(-3, "Legendary");
+		db.add_Title(-4, "Godlike");
+		
+		
 	} catch ( Exception e ) {
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
       System.exit(0);
