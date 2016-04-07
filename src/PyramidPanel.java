@@ -35,8 +35,8 @@ public class PyramidPanel extends JPanel {
     HashMap<String, Boolean> moveCircle;
     HashMap<String, Point> originalLocations;
     
-    private int width = 75;
-    private int height = 75;
+    private int width = Utilities.small_width;
+    private int height = Utilities.small_width;
 
     private MouseDrag mouseDrag;
     

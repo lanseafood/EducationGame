@@ -8,7 +8,8 @@ import java.util.Iterator;
 
 public class Utilities {
 
-	
+	static int big_width = 300;
+	static int small_width = 75;
 	
 	// Given a user, produces an arraylist indicating which questions have been properly answered.
 	// Uses 0-indexing, so Question 1 is at index 0. 

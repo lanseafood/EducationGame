@@ -78,22 +78,22 @@ public class QuestionPanel extends JPanel{
     	ImageIcon icon;
     	try {
 			image = ImageIO.read(new File("assets/" + animalName.toLowerCase() + ".png"));
-			image = image.getScaledInstance(300, 300, 0);
+			image = image.getScaledInstance(Utilities.big_width, Utilities.big_width, 0);
 			icon = new ImageIcon(image);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 
 			
-			image = new BufferedImage ( 300, 300, BufferedImage.TYPE_INT_ARGB );
+			image = new BufferedImage ( Utilities.big_width, Utilities.big_width, BufferedImage.TYPE_INT_ARGB );
 			Graphics g = image.getGraphics();
 			g.setColor(Color.WHITE);
-			g.fillRect(0, 0, 300, 300);
+			g.fillRect(0, 0, Utilities.big_width, Utilities.big_width);
 			g.setColor(Color.BLACK);
-			g.drawOval(0, 0, 300, 300);
+			g.drawOval(0, 0, Utilities.big_width, Utilities.big_width);
 			
 			
 			
-			Utilities.drawCenteredText(g, 150, 150, 30, animalName);
+			Utilities.drawCenteredText(g, Utilities.big_width/2, Utilities.big_width/2, Utilities.big_width/10, animalName);
 			
 			g.dispose();
 			
