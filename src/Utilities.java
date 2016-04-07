@@ -1,3 +1,6 @@
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -5,7 +8,8 @@ import java.util.Iterator;
 
 public class Utilities {
 
-	
+	static int big_width = 300;
+	static int small_width = 75;
 	
 	// Given a user, produces an arraylist indicating which questions have been properly answered.
 	// Uses 0-indexing, so Question 1 is at index 0. 
@@ -41,4 +45,22 @@ public class Utilities {
 		SQLiteJDBC db = new SQLiteJDBC();
 		db.set_Question_Data(user, answer);
 	}
+	
+    public static void drawCenteredText(Graphics g, int x, int y, float size, String text) {
+    	// Create a new font with the desired size
+    	Font newFont = g.getFont().deriveFont(size);
+    	g.setFont(newFont);
+    	// Find the size of string s in font f in the current Graphics context g.
+    	FontMetrics fm = g.getFontMetrics();
+    	java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
+
+    	int textHeight = (int) (rect.getHeight());
+    	int textWidth = (int) (rect.getWidth());
+
+    	// Find the top left and right corner
+    	int cornerX = x - (textWidth / 2);
+    	int cornerY = y - (textHeight / 2) + fm.getAscent();
+
+    	g.drawString(text, cornerX, cornerY);  // Draw the string.
+    	}
 }
