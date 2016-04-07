@@ -52,6 +52,18 @@ Returns a list of strings which contains the names of all users who have a profi
 
 ---
 
+public String get_Animal_Data(String name):
+
+Returns a string containing the animal data for the named user.
+
+---
+
+public void set_Animal_Data(String name, String data):
+
+Replaces the animal data for the given user with the given data string.
+
+---
+
 public String get_Question_Data(String name):
 
 Returns a string containing the question data for the named user.
@@ -64,7 +76,19 @@ Replaces the question data for the given user with the given data string.
 
 ---
 
-publid String get_Interest_Data(String name):
+public int get_User_Title(String name):
+
+Returns an integer index for the current title of the named user.
+
+---
+
+public void set_User_Title(String name, int data):
+
+Updates the title data for the given user with the given title index.
+
+---
+
+public String get_Interest_Data(String name):
 
 Returns a string containing the interest data for the named user.
 
@@ -97,7 +121,7 @@ Prints all stored questions, along with their answers. (Debug only)
 
 ---
 
-public Question get_QA(int rowid):
+public Question get_QA(int qa_id):
 
 Returns a question/answer tuple matching the given row/question number.
 
@@ -109,7 +133,7 @@ Returns a list of all question/answer tuples belonging to the given ecology ID.
 
 ---
 
-public void remove_QA(int rowid):
+public void remove_QA(int qa_id):
 
 Removes the question/answer pair from the question pool at the given row.
 
@@ -118,7 +142,7 @@ Removes the question/answer pair from the question pool at the given row.
 
 ECOLOGY TABLE METHODS:
 
-public void add_Ecology(int id, str name, int tropic):
+public void add_Ecology(String name, int tropic):
 
 Adds a new species to the ecology table.
 
@@ -151,6 +175,28 @@ Removes a species from the table given its ID.
 public void print_Ecology():
 
 Prints a list of all species in the table. (Debug only)
+
+
+
+
+TITLE TABLE METHODS:
+
+public void add_Title(int id, String name):
+
+Adds a new title with its id index to the Title table.
+
+---
+
+public String get_Title(int id):
+
+Returns the title for a given ID.
+
+---
+
+public void remove_Title(int id):
+
+Removes a title from the table given its ID.
+
 
 
 
