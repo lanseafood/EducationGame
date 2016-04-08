@@ -112,6 +112,7 @@ public class PyramidPanel extends JPanel {
         	if (!lastAnimal.equals("")) {
 	            if (dragging) {
 	            	Point newP = new Point(m.getX(), m.getY());
+	            	newP.setLocation(newP.x - Utilities.small_width/2, newP.y - Utilities.small_width/2);
 	                ellipsePoints.put(lastAnimal, newP);
 	            } 
 	            last = m.getPoint();
