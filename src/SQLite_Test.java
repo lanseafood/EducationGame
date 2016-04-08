@@ -32,10 +32,10 @@ public class SQLite_Test
 		System.out.println("\nPaul's updated interests:");
 		System.out.println(db.get_Interest_Data("Paul"));
 		
-		db.add_QA(1, "What do lions eat?", "Whatever they want.");
-		db.add_QA(2, "What is this database?", "Your best friend.");
-		db.add_QA(2, "Why did the chicken cross the road?", "I don''t know.");
-		db.add_QA(1, "Why are lions cool?", "Those gnarly teeth, yo.");
+		db.add_QA("What do lions eat?", "Whatever they want.");
+		db.add_QA("What is this database?", "Your best friend.");
+		db.add_QA("Why did the chicken cross the road?", "I don''t know.");
+		db.add_QA("Why are lions cool?", "Those gnarly teeth, yo.");
 		db.remove_QA(2);
 		
 		System.out.println("\nQuestions and Answers:");
@@ -53,10 +53,10 @@ public class SQLite_Test
 				q.get_Question(), q.get_Ecology_ID(), q.get_Answer());
 		}
 		
-		db.add_Ecology(1, "lion", 3);
-		db.add_Ecology(2, "vulture", 4);
-		db.add_Ecology(3, "elephant", 2);
-		db.add_Ecology(4, "giraffe", 2);
+		db.add_Ecology("lion", 3);
+		db.add_Ecology("vulture", 4);
+		db.add_Ecology("elephant", 2);
+		db.add_Ecology("giraffe", 2);
 		db.remove_Ecology(4);
 		
 		System.out.println("Query of all ecologies:");

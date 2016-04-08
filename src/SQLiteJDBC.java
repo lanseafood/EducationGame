@@ -25,21 +25,27 @@ public class SQLiteJDBC
 	Statement stmt = c.createStatement();
 	String sql =
 		"CREATE TABLE IF NOT EXISTS PROFILES (" +
-		"NAME VARCHAR(20) PRIMARY KEY NOT NULL, " +
-		"QUESTIONS VARCHAR(20) NOT NULL, " + 
-		"INTERESTS VARCHAR(20) NOT NULL)";
+		"NAME VARCHAR(24) NOT NULL, " +
+		"ANIMALS VARCHAR(14) NOT NULL, " + 
+		"QUESTIONS VARCHAR(52) NOT NULL, " + 
+		"TITLE INT NOT NULL, " + 		
+		"INTERESTS VARCHAR(20) NOT NULL, " + 
+		"PRIMARY KEY (NAME)";
 	stmt.executeUpdate(sql);
 	sql =
 		"CREATE TABLE IF NOT EXISTS QUESTIONS (" +
+		"QA_ID INT NOT NULL AUTO_INCREMENT, " +
 		"ECOLOGY_ID INT NOT NULL, " +
 		"QUESTION VARCHAR(256) NOT NULL, " + 
-		"ANSWER VARCHAR(64) NOT NULL)";
+		"ANSWER VARCHAR(64) NOT NULL, " + 
+		"PRIMARY KEY (QA_ID)";
 	stmt.executeUpdate(sql);
 	sql =
 		"CREATE TABLE IF NOT EXISTS ECOLOGY (" +
-		"ID INT PRIMARY KEY NOT NULL, " +
+		"ID INT NOT NULL AUTO_INCREMENT, " +
 		"NAME VARCHAR(32) NOT NULL, " + 
-		"TROPIC INT NOT NULL)";
+		"TROPIC INT NOT NULL, " + 
+		"PRIMARY KEY (ECOLOGY_ID)";
 	stmt.executeUpdate(sql);
 	sql =
 		"CREATE TABLE IF NOT EXISTS TITLES (" +
@@ -66,7 +72,9 @@ public class SQLiteJDBC
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO PROFILES " +
-		"VALUES ('%s', '00000000000000000000', '00000000000000000000');", name);
+		"VALUES ('%s', '00000000000000', " +
+	    "'0000000000000000000000000000000000000000000000000000', " +
+		"0, '00000000000000000000');", name);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
@@ -91,6 +99,31 @@ public class SQLiteJDBC
   }
   
   /* Fetches the question data of a user in the table */
+  public String get_Animal_Data(String name) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"SELECT ANIMALS FROM PROFILES " +
+		"WHERE NAME='%s';", name);
+	ResultSet rs = stmt.executeQuery(sql);
+	rs.next();
+	String out = rs.getString("animals");
+	rs.close();
+	stmt.close();
+	return out;
+  }
+  
+  /* Updates the question data of a user in the table */
+  public void set_Animal_Data(String name, String data) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"UPDATE PROFILES " +
+		"SET ANIMALS='%s' " +
+		"WHERE NAME='%s';", data, name);
+	stmt.executeUpdate(sql);
+	stmt.close();
+  }
+  
+  /* Fetches the question data of a user in the table */
   public String get_Question_Data(String name) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
@@ -110,6 +143,31 @@ public class SQLiteJDBC
 	String sql = String.format(
 		"UPDATE PROFILES " +
 		"SET QUESTIONS='%s' " +
+		"WHERE NAME='%s';", data, name);
+	stmt.executeUpdate(sql);
+	stmt.close();
+  }
+  
+  /* Fetches the question data of a user in the table */
+  public int get_User_Title(String name) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"SELECT TITLE FROM PROFILES " +
+		"WHERE NAME='%s';", name);
+	ResultSet rs = stmt.executeQuery(sql);
+	rs.next();
+	int out = rs.getInt("title");
+	rs.close();
+	stmt.close();
+	return out;
+  }
+  
+  /* Updates the question data of a user in the table */
+  public void set_User_Title(String name, int data) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"UPDATE PROFILES " +
+		"SET TITLE=%d " +
 		"WHERE NAME='%s';", data, name);
 	stmt.executeUpdate(sql);
 	stmt.close();
@@ -155,11 +213,11 @@ public class SQLiteJDBC
   /* // QUESTIONS Table Methods // */
   
   /* Add a new question/answer pair to the table */
-  public void add_QA(int ecology_id, String question, String answer) throws SQLException {
+  public void add_QA(String question, String answer) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO QUESTIONS " +
-		"VALUES (%d, '%s', '%s');", ecology_id, question, answer);
+		"VALUES ('%s', '%s');", question, answer);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
@@ -167,33 +225,33 @@ public class SQLiteJDBC
   /* Prints all stored questions and answers (debug only) */
   public void print_QAs() throws SQLException {
 	Statement stmt = c.createStatement();
-	ResultSet rs = stmt.executeQuery("SELECT ROWID, * FROM QUESTIONS;");
+	ResultSet rs = stmt.executeQuery("SELECT * FROM QUESTIONS;");
 	while (rs.next()) {		
-		int rowid = rs.getInt("rowid");
+		int qa_id = rs.getInt("qa_id");
 		int eid = rs.getInt("ecology_id");
 		String q = rs.getString("question");
 		String a = rs.getString("answer");
-		System.out.printf("%d: %s (%d)\n\t%s\n", rowid, q, eid, a);
+		System.out.printf("%d: %s (%d)\n\t%s\n", qa_id, q, eid, a);
 	}
 	rs.close();
 	stmt.close();
   }
   
   /* Fetches a single question/answer pair from a particular row in the table */
-  public Question get_QA(int row) throws SQLException {
+  public Question get_QA(int qa_id) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
-		"SELECT ROWID, * FROM QUESTIONS " +
-		"WHERE ROWID=%d;", row);
+		"SELECT * FROM QUESTIONS " +
+		"WHERE QA_ID=%d;", qa_id);
 	ResultSet rs = stmt.executeQuery(sql);
 	rs.next();
-	int rowid = rs.getInt("rowid");
-	int id = rs.getInt("ecology_id");
+	int q_id = rs.getInt("qa_id");
+	int e_id = rs.getInt("ecology_id");
 	String q = rs.getString("question");
 	String a = rs.getString("answer");
 	rs.close();
 	stmt.close();
-	Question out = (q == null) ? null : new Question(rowid, id, q, a);
+	Question out = (q == null) ? null : new Question(q_id, e_id, q, a);
 	return out;
   }
   
@@ -211,15 +269,15 @@ public class SQLiteJDBC
 	// Create array of count size and read Q/As into it
 	ArrayList<Question> out = new ArrayList<Question>(count);	
 	sql = String.format(
-		"SELECT ROWID, * FROM QUESTIONS " +
+		"SELECT * FROM QUESTIONS " +
 		"WHERE ECOLOGY_ID=%d;", ecology_id);
 	rs = stmt.executeQuery(sql);
 	while (rs.next()) {
-		int rowid = rs.getInt("rowid");
+		int qa_id = rs.getInt("qa_id");
 		int eid = rs.getInt("ecology_id");
 		String q = rs.getString("question");
 		String a = rs.getString("answer");
-		out.add(new Question(rowid, eid, q, a));
+		out.add(new Question(qa_id, eid, q, a));
 	}
 	rs.close();
 	stmt.close();
@@ -227,11 +285,11 @@ public class SQLiteJDBC
   }
   
   /* Remove a question/answer pair from the table */
-  public void remove_QA(int row) throws SQLException {
+  public void remove_QA(int qa_id) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"DELETE FROM QUESTIONS " +
-		"WHERE ROWID=%d;", row);
+		"WHERE QA_ID=%d;", qa_id);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
@@ -241,11 +299,11 @@ public class SQLiteJDBC
   /* // ECOLOGY Table Methods // */
   
   /* Add a new ecology to the table */
-  public void add_Ecology(int ecology_id, String name, int tropic) throws SQLException {
+  public void add_Ecology(String name, int tropic) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO ECOLOGY " +
-		"VALUES (%d, '%s', %d);", ecology_id, name, tropic);
+		"VALUES ('%s', %d);", name, tropic);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
@@ -278,7 +336,7 @@ public class SQLiteJDBC
 	return out;
   }
   
-  /* Fetches the troipic level number of a species in the table */
+  /* Fetches the tropic level number of a species in the table */
   public int get_Ecology_Tropic(int id) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(

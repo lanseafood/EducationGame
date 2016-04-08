@@ -49,7 +49,11 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		// Process data for useful info
 		for (int i = 0; i < speciesCount; i++) {
 			// Get score for species i
-			int speciesScore = Integer.parseInt(data.substring(i*2, (i+1)*2), 2);
+			int q1score = Integer.parseInt(data.substring(i*3, i*3 + 1));
+			int q2score = Integer.parseInt(data.substring(i*3 + 1, i*3 + 2));
+			int q3score = Integer.parseInt(data.substring(i*3 + 2, i*3 + 3));
+			int speciesScore = q1score + q2score + q3score;
+			
 			score += speciesScore;
 			if (speciesScore == 3)
 				titleIDs.add(i + 1); //assume species IDs/enumeration begins at 1
