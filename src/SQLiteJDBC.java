@@ -211,11 +211,11 @@ public class SQLiteJDBC
   /* // QUESTIONS Table Methods // */
   
   /* Add a new question/answer pair to the table */
-  public void add_QA(int e_id, String question, String answer) throws SQLException {
+  public void add_QA(int q_id, int e_id, String question, String answer) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO QUESTIONS " +
-		"VALUES (NULL, %d, '%s', '%s');", e_id, question, answer);
+		"VALUES (%d, %d, '%s', '%s');", q_id, e_id, question, answer);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
@@ -297,11 +297,11 @@ public class SQLiteJDBC
   /* // ECOLOGY Table Methods // */
   
   /* Add a new ecology to the table */
-  public void add_Ecology(String name, int tropic) throws SQLException {
+  public void add_Ecology(int e_id, String name, int tropic) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO ECOLOGY " +
-		"VALUES (NULL, '%s', %d);", name, tropic);
+		"VALUES (%d, '%s', %d);", e_id, name, tropic);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
