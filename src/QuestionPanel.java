@@ -76,6 +76,8 @@ public class QuestionPanel extends JPanel{
     	
     	Image image;
     	ImageIcon icon;
+    	
+    	
     	try {
 			image = ImageIO.read(new File("assets/" + animalName.toLowerCase() + ".png"));
 			image = image.getScaledInstance(Utilities.big_width, Utilities.big_width, 0);
@@ -106,7 +108,12 @@ public class QuestionPanel extends JPanel{
     	
     	this.add(imagePanel);
     	
-    	
+		
+		if (parent.finishedAnimals.contains(animalName)){
+			imagePanel.setOpaque(true);
+			imagePanel.setBackground(Color.GREEN);
+			
+		}
 		
 		
 		JButton test = new JButton();
@@ -128,7 +135,7 @@ public class QuestionPanel extends JPanel{
 			
 			JPanel questionContainer = new JPanel();
 			questionContainer.setLayout(new BoxLayout(questionContainer, BoxLayout.Y_AXIS));
-		
+
 			
 			String question = iter.next();
 			System.out.println(QAPairs.get(question));
@@ -146,15 +153,18 @@ public class QuestionPanel extends JPanel{
 			
 			JButton answerButton = new JButton();
 			final String answer = QAPairs.get(question);
+			
+			//TODO: Remove this 
 			ansSpot.setText(answer);
 			answerButton.setText("Submit");
-			
+			ansSpot.setDisabledTextColor(Color.BLACK);
 			
 			if (parent.answered.get(question) != null && parent.answered.get(question)){
 				questionContainer.setBackground(Color.GREEN);
 				answerSlot.setBackground(Color.GREEN);
 				ansSpot.setEnabled(false);
 				ansSpot.setText(answer);
+				ansSpot.setDisabledTextColor(Color.BLACK);
 			}
 			else{
 				final String copyName = new String(animalName);
