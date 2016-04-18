@@ -213,11 +213,11 @@ public class SQLiteJDBC
   /* // QUESTIONS Table Methods // */
   
   /* Add a new question/answer pair to the table */
-  public void add_QA(String question, String answer) throws SQLException {
+  public void add_QA(int e_id, String question, String answer) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO QUESTIONS " +
-		"VALUES ('%s', '%s');", question, answer);
+		"VALUES (%d, '%s', '%s');", e_id, question, answer);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
