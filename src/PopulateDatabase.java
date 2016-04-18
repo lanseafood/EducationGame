@@ -17,26 +17,27 @@ public class PopulateDatabase
 		db.add_User("Simba");
 		
 		//set question data
-		db.set_Question_Data("Simba", "00000000000000000000");
+		//db.set_Question_Data("Simba", "00000000000000000000");
 				
 		//add organisms
-		db.add_Ecology(1, "King Vulture", 4);
-		db.add_Ecology(2, "Eagle", 4);
-		db.add_Ecology(3, "Lion", 3);
-		db.add_Ecology(4, "Cheetah", 3);
-		db.add_Ecology(5, "Tiger", 3);
-		db.add_Ecology(6, "Hyena", 3);
-		db.add_Ecology(7, "Elephant", 2);
-		db.add_Ecology(8, "Giraffe", 2);
-		db.add_Ecology(9, "Antelope", 2);
-		db.add_Ecology(10, "Rhinoceros", 2);
-		db.add_Ecology(11, "Acacia", 1);
-		db.add_Ecology(12, "Elephant Grass", 1);
-		db.add_Ecology(13, "Baobab", 1);
-		db.add_Ecology(14, "River Bushwillow", 1);
+		db.add_Ecology("King Vulture", 4);
+		db.add_Ecology("Eagle", 4);
+		db.add_Ecology("Lion", 3);
+		db.add_Ecology("Cheetah", 3);
+		db.add_Ecology("Tiger", 3);
+		db.add_Ecology("Hyena", 3);
+		db.add_Ecology("Elephant", 2);
+		db.add_Ecology("Giraffe", 2);
+		db.add_Ecology("Antelope", 2);
+		db.add_Ecology("Rhinoceros", 2);
+		db.add_Ecology("Acacia", 1);
+		db.add_Ecology("Elephant Grass", 1);
+		db.add_Ecology("Baobab", 1);
+		db.add_Ecology("River Bushwillow", 1);
 		
 		//add question and answers
 		//Vultures:
+		
 		db.add_QA(1, "At what age does the King Vulture take its first flight?", "3 months");
 		db.add_QA(1, "What habitat does the King Vulture inhabit?", "Savannas and Grasslands");
 		db.add_QA(1, "How long do King Vultures live in captivity?", "30 years");

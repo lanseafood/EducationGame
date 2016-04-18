@@ -30,22 +30,20 @@ public class SQLiteJDBC
 		"QUESTIONS VARCHAR(52) NOT NULL, " + 
 		"TITLE INT NOT NULL, " + 		
 		"INTERESTS VARCHAR(20) NOT NULL, " + 
-		"PRIMARY KEY (NAME)";
+		"PRIMARY KEY (NAME))";
 	stmt.executeUpdate(sql);
 	sql =
 		"CREATE TABLE IF NOT EXISTS QUESTIONS (" +
-		"QA_ID INT NOT NULL AUTO_INCREMENT, " +
+		"QA_ID INT PRIMARY KEY, " +
 		"ECOLOGY_ID INT NOT NULL, " +
 		"QUESTION VARCHAR(256) NOT NULL, " + 
-		"ANSWER VARCHAR(64) NOT NULL, " + 
-		"PRIMARY KEY (QA_ID)";
+		"ANSWER VARCHAR(64) NOT NULL)";
 	stmt.executeUpdate(sql);
 	sql =
 		"CREATE TABLE IF NOT EXISTS ECOLOGY (" +
-		"ID INT NOT NULL AUTO_INCREMENT, " +
+		"ID INT PRIMARY KEY, " +
 		"NAME VARCHAR(32) NOT NULL, " + 
-		"TROPIC INT NOT NULL, " + 
-		"PRIMARY KEY (ECOLOGY_ID)";
+		"TROPIC INT NOT NULL)";
 	stmt.executeUpdate(sql);
 	sql =
 		"CREATE TABLE IF NOT EXISTS TITLES (" +
@@ -217,7 +215,7 @@ public class SQLiteJDBC
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO QUESTIONS " +
-		"VALUES (%d, '%s', '%s');", e_id, question, answer);
+		"VALUES (NULL, %d, '%s', '%s');", e_id, question, answer);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
@@ -303,7 +301,7 @@ public class SQLiteJDBC
 	Statement stmt = c.createStatement();
 	String sql = String.format(
 		"INSERT INTO ECOLOGY " +
-		"VALUES ('%s', %d);", name, tropic);
+		"VALUES (NULL, '%s', %d);", name, tropic);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }
