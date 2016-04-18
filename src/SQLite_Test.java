@@ -32,10 +32,10 @@ public class SQLite_Test
 		System.out.println("\nPaul's updated interests:");
 		System.out.println(db.get_Interest_Data("Paul"));
 		
-		db.add_QA("What do lions eat?", "Whatever they want.");
-		db.add_QA("What is this database?", "Your best friend.");
-		db.add_QA("Why did the chicken cross the road?", "I don''t know.");
-		db.add_QA("Why are lions cool?", "Those gnarly teeth, yo.");
+		db.add_QA(1, "What do lions eat?", "Whatever they want.");
+		db.add_QA(2, "What is this database?", "Your best friend.");
+		db.add_QA(1, "Why did the chicken cross the road?", "I don''t know.");
+		db.add_QA(2, "Why are lions cool?", "Those gnarly teeth, yo.");
 		db.remove_QA(2);
 		
 		System.out.println("\nQuestions and Answers:");
