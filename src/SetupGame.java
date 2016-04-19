@@ -23,7 +23,7 @@ public class SetupGame{
 		return panel;
 	}
 	
-	public JPanel getQuestionPanel(PyramidMasterPanel p) {
+	public ProfilePanel getQuestionPanel(PyramidMasterPanel p) {
 		
 		SQLiteJDBC db = new SQLiteJDBC();
 		String data = "";

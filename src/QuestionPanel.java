@@ -162,7 +162,7 @@ public class QuestionPanel extends JScrollPane{
 			final String answer = QAPairs.get(question);
 			
 			//TODO: Remove this 
-			ansSpot.setText(answer);
+			//ansSpot.setText(answer);
 			answerButton.setText("Submit");
 			ansSpot.setDisabledTextColor(Color.BLACK);
 			
