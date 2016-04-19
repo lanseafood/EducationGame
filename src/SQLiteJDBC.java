@@ -282,6 +282,22 @@ public class SQLiteJDBC
 	return out;
   }
   
+  public int get_Num_QAs() throws SQLException {
+		Statement stmt = c.createStatement();	
+		// Get count of rows	
+		String sql = String.format(
+			"SELECT COUNT(QUESTION) FROM QUESTIONS ");
+		ResultSet rs = stmt.executeQuery(sql);
+		rs.next(); 
+		int count = rs.getInt("count(question)");
+		rs.close();
+		stmt.close();
+		return count;
+	  }
+  
+  
+  
+  
   /* Remove a question/answer pair from the table */
   public void remove_QA(int qa_id) throws SQLException {
 	Statement stmt = c.createStatement();
@@ -404,11 +420,11 @@ public class SQLiteJDBC
   public String get_Title(int id) throws SQLException {
 	Statement stmt = c.createStatement();
 	String sql = String.format(
-		"SELECT NAME FROM TITLES " +
+		"SELECT TITLE FROM TITLES " +
 		"WHERE ID=%d;", id);
 	ResultSet rs = stmt.executeQuery(sql);
 	rs.next();
-	String out = rs.getString("name");
+	String out = rs.getString("TITLE");
 	rs.close();
 	stmt.close();
 	return out;

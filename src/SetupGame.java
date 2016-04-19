@@ -1,6 +1,7 @@
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,22 +14,29 @@ import javax.swing.JPanel;
 
 public class SetupGame{
 	List<String> ecology = new ArrayList<String>();
-	public JPanel getFoodChainPanel() {
+	public PyramidMasterPanel getFoodChainPanel() {
 		//TODO: change this to read from database
 		ecology = Arrays.asList("King Vulture", "Lion", "Elephant", "Giraffe", "Acacia", "Baobab");
 		
-		JPanel panel = new PyramidMasterPanel("Simba", ecology); //JPanel();
+		PyramidMasterPanel panel = new PyramidMasterPanel("Simba", ecology); //JPanel();
 		
 		return panel;
 	}
 	
-	public JPanel getQuestionPanel() {
-		JPanel panel = new JPanel();
-		JLabel l = new JLabel("Museum Data");
-		panel.setLayout(new FlowLayout());
-		//ProfilePanel profPanel = new ProfilePanel("Simba", null, null);
+	public ProfilePanel getQuestionPanel(PyramidMasterPanel p) {
 		
-		panel.add(l);
+		SQLiteJDBC db = new SQLiteJDBC();
+		String data = "";
+		try {
+			data = db.get_Question_Data(p.username);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ProfilePanel panel = new ProfilePanel(p.username, null, data);
+		
+		
 		//panel.add(profPanel);
 		return panel;
 	}

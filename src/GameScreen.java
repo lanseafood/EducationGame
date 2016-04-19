@@ -47,8 +47,8 @@ public class GameScreen extends Container {
 		
 		//set the card layout
 		SetupGame sg = new SetupGame();
-		JPanel card1 = sg.getFoodChainPanel();
-		JPanel card2 = sg.getQuestionPanel();
+		PyramidMasterPanel card1 = sg.getFoodChainPanel();
+		ProfilePanel card2 = sg.getQuestionPanel(card1);
 		
 		center.setLayout(new CardLayout());
 		center.add(card1, "1");
@@ -61,6 +61,8 @@ public class GameScreen extends Container {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (card1Showing) {
+					
+					card2.reload();
 					card2.setVisible(true);
 					card1.setVisible(false);
 					card1Showing = false;

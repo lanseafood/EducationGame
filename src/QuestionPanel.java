@@ -18,14 +18,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 
-public class QuestionPanel extends JPanel{
+public class QuestionPanel extends JScrollPane{
 	
 	public int animal_id;
 	
 	HashMap<String, String> QAPairs;
+	HashMap<String, Integer> questionIDs;
+	
+	
 	ArrayList<String> answers;
 	
 	String username;
@@ -43,6 +48,8 @@ public class QuestionPanel extends JPanel{
 		this.animalName = animalName;
 		
 		QAPairs = new HashMap<String, String>();
+		questionIDs = new HashMap<String, Integer>();
+		JPanel panel = new JPanel();
 		
 		SQLiteJDBC db = new SQLiteJDBC();
 		try {
@@ -57,6 +64,7 @@ public class QuestionPanel extends JPanel{
 			while (iter.hasNext()){
 				Question q = iter.next();
 				QAPairs.put(q.get_Question(), q.get_Answer());
+				questionIDs.put(q.get_Question(), q.get_Question_ID());
 				
 			}
 			
@@ -67,8 +75,8 @@ public class QuestionPanel extends JPanel{
 			e.printStackTrace();
 		}
 		
-		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
-		this.setLayout(box);
+		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
+		panel.setLayout(box);
 		
 
     	JPanel imagePanel = new JPanel();
@@ -106,7 +114,7 @@ public class QuestionPanel extends JPanel{
     	label.setIcon(icon);
     	imagePanel.add(label);
     	
-    	this.add(imagePanel);
+    	panel.add(imagePanel);
     	
 		
 		if (parent.finishedAnimals.contains(animalName)){
@@ -128,7 +136,7 @@ public class QuestionPanel extends JPanel{
 			
 		});
 		
-		final JPanel par = this;
+		final JPanel par = panel;
 		Iterator<String> iter = QAPairs.keySet().iterator();
 		
 		for (int i = 1; iter.hasNext(); ++i){
@@ -138,8 +146,7 @@ public class QuestionPanel extends JPanel{
 
 			
 			String question = iter.next();
-			System.out.println(QAPairs.get(question));
-			
+		
 			JTextField field = new JTextField();
 			field.setText("Question " + (i) + ": " + question);
 			field.setEditable(false);
@@ -155,7 +162,7 @@ public class QuestionPanel extends JPanel{
 			final String answer = QAPairs.get(question);
 			
 			//TODO: Remove this 
-			ansSpot.setText(answer);
+			//ansSpot.setText(answer);
 			answerButton.setText("Submit");
 			ansSpot.setDisabledTextColor(Color.BLACK);
 			
@@ -178,6 +185,11 @@ public class QuestionPanel extends JPanel{
 							answerSlot.setBackground(Color.GREEN);
 							
 							parent.answered.put(question, true);
+							int id = questionIDs.get(question);
+							parent.answeredIDs.put(id, true);
+							Utilities.saveGame(parent);
+							
+							
 							ansSpot.setEnabled(false);
 							if (allAnswered(copyName, parent)){
 								parent.finishedAnimals.add(copyName);
@@ -203,7 +215,9 @@ public class QuestionPanel extends JPanel{
 		}
 		
 		
-		this.add(test);
+		panel.add(test);
+		this.setViewportView(panel);
+		this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 	}
 	
 	public boolean allAnswered(String animalName, PyramidMasterPanel parent){

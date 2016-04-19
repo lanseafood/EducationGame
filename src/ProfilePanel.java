@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 
 public class ProfilePanel extends JPanel implements ActionListener {
@@ -21,6 +23,10 @@ public class ProfilePanel extends JPanel implements ActionListener {
 	ArrayList<Boolean> answered;
 	public String animalName;
 	PyramidMasterPanel parent;
+	
+	
+	JLabel scoreText;
+	JComboBox<String> titles;
 	
 	// Set values, can be scaled up as project expands
 	private int speciesCount = 14;
@@ -33,19 +39,75 @@ public class ProfilePanel extends JPanel implements ActionListener {
 	ImageIcon image;
 	int score = 0;
 	
+	String data;
+	
 	// Pass in username, image icon, and data for user
 	// Get panel showing all information and allowing switch of user title
 	// Title is either global or pulled from data as last set of bits (assumed global for now)
 	public ProfilePanel(String username, ImageIcon image, String data) {
 		this.username = username;
+		//System.out.println(username);
 		this.image = image;
+		this.data = data;
+		// Create title dropdown
+		titles = new JComboBox<String>();
+
+
+		// Draw panel
+		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
+		this.setLayout(box);
 		
+		JLabel user = new JLabel(username, image, JLabel.CENTER);
+		scoreText = new JLabel();
+		JButton exit = new JButton("Close");
+		exit.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//parent.removeProfilePanel();
+			}
+			
+		});
+		
+		load();
+		
+		this.add(user);
+		Border b = new EmptyBorder(500, 0, 100, 0);
+		scoreText.setBorder(b);
+		this.add(titles);
+		this.add(scoreText);
+		
+		this.add(exit);
+		
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+        JComboBox<String> cb = (JComboBox<String>)e.getSource();
+        currentTitle = (String)cb.getSelectedItem();
+    }
+	
+	public void reload(){
+		SQLiteJDBC db = new SQLiteJDBC();
+		try {
+			data = db.get_Question_Data(username);
+			
+			//System.out.println(username + data);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		
+		load();
+	}
+	
+	public void load(){
+		titles.removeAllItems();
 		// Create list for holding title indices during data reading
 		ArrayList<Integer> titleIDs = new ArrayList<Integer>();
 		
 		// First title, novice title, auto-unlocked
-		titleIDs.add(0);
-		
+		titleIDs.add(-1);
+		score = 0;
 		// Process data for useful info
 		for (int i = 0; i < speciesCount; i++) {
 			// Get score for species i
@@ -53,6 +115,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 			int q2score = Integer.parseInt(data.substring(i*3 + 1, i*3 + 2));
 			int q3score = Integer.parseInt(data.substring(i*3 + 2, i*3 + 3));
 			int speciesScore = q1score + q2score + q3score;
+			
 			
 			score += speciesScore;
 			if (speciesScore == 3)
@@ -68,11 +131,8 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		
 		// Order titleIDs such that milestones come first (best to worst sorted)
 		Collections.sort(titleIDs);
-		
-		// Create title dropdown
-		JComboBox<String> titles = new JComboBox<String>();
-		
-		// Open database instance to fetch titles
+		System.out.println(titleIDs);
+		scoreText.setText("Score: " + score);
 		SQLiteJDBC db = new SQLiteJDBC();
 		try {
 			// Populate title dropdown
@@ -91,31 +151,5 @@ public class ProfilePanel extends JPanel implements ActionListener {
 			titles.addItem("Error");
 			e.printStackTrace();
 		}
-		
-		// Draw panel
-		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
-		this.setLayout(box);
-		
-		JLabel user = new JLabel(username, image, JLabel.CENTER);
-		JTextField scoreText = new JTextField();
-		JButton exit = new JButton("Close");
-		exit.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//parent.removeProfilePanel();
-			}
-			
-		});
-		scoreText.setText("Score: " + score);
-		this.add(user);
-		this.add(scoreText);
-		this.add(exit);
-		
 	}
-	
-	public void actionPerformed(ActionEvent e) {
-        JComboBox<String> cb = (JComboBox<String>)e.getSource();
-        currentTitle = (String)cb.getSelectedItem();
-    }
 }

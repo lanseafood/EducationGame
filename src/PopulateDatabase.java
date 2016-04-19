@@ -17,7 +17,7 @@ public class PopulateDatabase
 		db.add_User("Simba");
 		
 		//set question data
-		//db.set_Question_Data("Simba", "00000000000000000000");
+		db.set_Question_Data("Simba", "000000000000000000000000000000000000000000");
 				
 		//add organisms
 		db.add_Ecology(1, "King Vulture", 4);
@@ -43,7 +43,7 @@ public class PopulateDatabase
 		db.add_QA(3, 1, "How long do King Vultures live in captivity?", "30 years");
 		
 		//Eagles:
-		db.add_QA(4, 2, "What are eagles’ nests called?", "Eyries");
+		db.add_QA(4, 2, "What are eagles'' nests called?", "Eyries");
 		db.add_QA(5, 2, "How many species of the eagle exist?", "More than 60");
 		db.add_QA(6, 2, "How many eggs do eagles normally lay?", "2");
 		
@@ -63,7 +63,7 @@ public class PopulateDatabase
 		db.add_QA(15, 5, "How fast can tigers run?", "40 mph");
 		
 		//Hyenas:
-		db.add_QA(16, 6, "What does a hyena’s laugh indicate?", "Social status and age");
+		db.add_QA(16, 6, "What does a hyena''s laugh indicate?", "Social status and age");
 		db.add_QA(17, 6, "True or false: Hyenas are matriarchal.", "True");
 		db.add_QA(18, 6, "What is the gestation period for a hyena?", "110 days");
 		
@@ -73,17 +73,17 @@ public class PopulateDatabase
 		db.add_QA(21, 7, "What is the tusk of an elephant made of?", "Ivory");
 		
 		//Giraffes:
-		db.add_QA(22, 8, "What is the color of a giraffe’s tongue?", "Purple");
+		db.add_QA(22, 8, "What is the color of a giraffe''s tongue?", "Purple");
 		db.add_QA(23, 8, "How much do giraffes sleep per day?", "10 minutes - 2 hours");
 		db.add_QA(24, 8, "At what age can a baby giraffe stand up?", "30 minutes");
 		
 		//Antelope:
 		db.add_QA(25, 9, "True or false: Antelope are ruminants.", "True");
-		db.add_QA(26, 9, "How large can an antelope’s horns grow?", "5 feet");
+		db.add_QA(26, 9, "How large can an antelope''s horns grow?", "5 feet");
 		db.add_QA(27, 9, "How fast can antelope run?", "43 mph");
 		
 		//Rhinoceros:
-		db.add_QA(28, 10, "What does the word ‘rhinoceros’ mean?", "Nose horn");
+		db.add_QA(28, 10, "What does the word ''rhinoceros'' mean?", "Nose horn");
 		db.add_QA(29, 10, "What is the horn of a rhino made of?", "Keratin");
 		db.add_QA(30, 10, "What is the gestation period for a rhino?", "15-16 months");
 		

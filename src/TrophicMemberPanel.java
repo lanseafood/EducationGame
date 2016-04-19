@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -11,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -26,8 +25,8 @@ public class TrophicMemberPanel extends JScrollPane{
 	public TrophicMemberPanel(int trophicLevel, PyramidMasterPanel parent){
 		
 		
-		ArrayList<String> correctlyPlacedAnimals = parent.correctlyPlacedAnimals;
-		ArrayList<String> finishedAnimals = parent.finishedAnimals;
+		TreeSet<String> correctlyPlacedAnimals = parent.correctlyPlacedAnimals;
+		TreeSet<String> finishedAnimals = parent.finishedAnimals;
 		
 		JPanel outerPanel = new JPanel();
 		outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));

@@ -3,7 +3,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 
 public class Utilities {
@@ -14,18 +16,100 @@ public class Utilities {
 	// Given a user, produces an arraylist indicating which questions have been properly answered.
 	// Uses 0-indexing, so Question 1 is at index 0. 
 	
-	public static ArrayList<Boolean> decodeAnswers(String username) throws SQLException{
+	public static void saveGame(PyramidMasterPanel p){
+		try {
+			Utilities.updateAnswers(p.username, p.answeredIDs);
+		} catch (SQLException e) {
+			System.out.println("Failed to save game.");
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	public static void loadGame(PyramidMasterPanel p, String username){
+		try {
+			p.answeredIDs = Utilities.decodeAnswers(username);
+			System.out.println(p.answeredIDs);
+			HashMap<String, Boolean> answered = new HashMap<String, Boolean>(); 
+			Iterator<Integer> qIDs = p.answeredIDs.keySet().iterator();
+			SQLiteJDBC db = new SQLiteJDBC();
+			//System.out.println(p.answeredIDs.size());
+			while (qIDs.hasNext()){
+				Integer i = qIDs.next();
+				//System.out.println(i);
+				Question question = db.get_QA(i);
+				if (question == null){
+					return;
+				}
+				String q = question.get_Question();
+				Boolean qAnsd = p.answeredIDs.get(i);
+				answered.put(q, qAnsd);
+			}
+			
+			p.answered = answered != null ? answered : new HashMap<String, Boolean>();
+			p.correctlyPlacedAnimals = new TreeSet<String>();
+			p.finishedAnimals = new TreeSet<String>();
+			
+			ArrayList<String> animals = db.retrieve_Ecology();
+			Iterator<String> anIter = animals.iterator();
+			while (anIter.hasNext()){
+				String animalName = anIter.next();
+				if (Utilities.checkAnimalCleared(p, animalName)){
+					p.correctlyPlacedAnimals.add(animalName);
+					p.finishedAnimals.add(animalName);
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			p.answeredIDs = new HashMap<Integer, Boolean>();
+			p.answered = new HashMap<String, Boolean>();
+			
+			System.out.println("Failed to load game.");
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	public static boolean checkAnimalCleared(PyramidMasterPanel p, String animal){
+		SQLiteJDBC db = new SQLiteJDBC();
+		
+		try {
+			int id = db.get_Ecology_ID(animal);
+			ArrayList<Question> qs = db.get_QAs(id);
+			Iterator<Question> iter = qs.iterator();
+			while (iter.hasNext()){
+				Question q = iter.next();
+				String question = q.get_Question();
+				if (question == null){
+					System.out.println("wow");
+					System.out.flush();
+				}
+				if (p.answered.get(question) == null || p.answered.get(question) == false)
+					return false;
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+		
+		
+	}
+	
+	public static HashMap<Integer, Boolean> decodeAnswers(String username) throws SQLException{
 		SQLiteJDBC db = new SQLiteJDBC();
 		String answered = db.get_Question_Data(username);
 		
-		//Currently, the rightmost-bit is Question 1: 
-		
-		ArrayList<Boolean> ans = new ArrayList<Boolean>();
-		int i = username.length() - 1;
-		while (i >= 0){
+		HashMap<Integer, Boolean> ans = new HashMap<Integer, Boolean>();
+		int i = 0;
+		while (i < answered.length()){
 			Boolean a = answered.charAt(i) == '1' ? true : false;
-			ans.add(a);
-			i--;
+			ans.put(i+1, a);
+			i++;
 		}
 		
 		return ans;
@@ -33,16 +117,39 @@ public class Utilities {
 	
 	
 	// Produces and sends a bit-string corresponding to the answered questions. 
-	// The ====rightmost bit==== corresponds to Question 1. 
-	public void updateAnswers(String user, ArrayList<Boolean> answered) throws SQLException{
-		String answer = "";
-		Iterator<Boolean> iter = answered.iterator();
+	// The ====left bit==== corresponds to Question 1. 
+	public static void updateAnswers(String user, HashMap<Integer, Boolean> answered) throws SQLException{
+		
+		Iterator<Integer> iter = answered.keySet().iterator();
+
+		SQLiteJDBC db = new SQLiteJDBC();
+		int count = db.get_Num_QAs();
+		
+		
+		char[] vals = new char[count];
+		
 		while (iter.hasNext()){
-			String prepend = iter.next() == true ? "1" : "0";
-			answer = prepend + answer;
+			Integer qNum = iter.next();
+			if (answered.get(qNum) == true){
+				vals[qNum-1] = 1;
+			}
+			
 		}
 		
-		SQLiteJDBC db = new SQLiteJDBC();
+		int i = 0; 
+		while (i < count){
+			// for proper utf-16 values
+			if (vals[i] == 0){
+				vals[i] = '0';
+			} else {
+				vals[i] = '1';
+			}
+		
+			i++;
+		}
+		
+		String answer = String.valueOf(vals);
+		
 		db.set_Question_Data(user, answer);
 	}
 	
