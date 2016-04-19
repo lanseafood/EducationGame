@@ -44,7 +44,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		ArrayList<Integer> titleIDs = new ArrayList<Integer>();
 		
 		// First title, novice title, auto-unlocked
-		titleIDs.add(0);
+		titleIDs.add(-1);
 		
 		// Process data for useful info
 		for (int i = 0; i < speciesCount; i++) {
@@ -68,6 +68,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		
 		// Order titleIDs such that milestones come first (best to worst sorted)
 		Collections.sort(titleIDs);
+		System.out.println(titleIDs);
 		
 		// Create title dropdown
 		JComboBox<String> titles = new JComboBox<String>();
@@ -76,7 +77,7 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		SQLiteJDBC db = new SQLiteJDBC();
 		try {
 			// Populate title dropdown
-			for (int i = 0; i < titleIDs.size(); i++) {
+			for (int i = 1; i < titleIDs.size(); i++) {
 				titles.addItem(db.get_Title(titleIDs.get(i)));
 			}
 			

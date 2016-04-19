@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -13,17 +14,24 @@ public class PyramidMasterPanel extends JPanel {
 	
 	public PyramidPanel pyramidPanel;
 	public JComponent questionPanel;
-	String username;
-	HashMap<String, Boolean> answered;
+	public String username;
+	public HashMap<String, Boolean> answered;
 	
-	ArrayList<String> finishedAnimals;
-	ArrayList<String> correctlyPlacedAnimals;
+	public HashMap<Integer, Boolean> answeredIDs;
+	
+	
+	
+	public TreeSet<String> finishedAnimals;
+	public TreeSet<String> correctlyPlacedAnimals;
 	
 	public PyramidMasterPanel(String username, List<String> animals){
 		this.username = username;
 		this.answered = new HashMap<String, Boolean>();
-		this.finishedAnimals = new ArrayList<String>();
-		this.correctlyPlacedAnimals = new ArrayList<String>();
+		this.answeredIDs = new HashMap<Integer, Boolean>();
+		this.finishedAnimals = new TreeSet<String>();
+		this.correctlyPlacedAnimals = new TreeSet<String>();
+		
+		Utilities.loadGame(this, username);
 		
 		
 		BorderLayout layout = new BorderLayout();

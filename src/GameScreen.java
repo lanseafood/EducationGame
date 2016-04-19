@@ -47,8 +47,8 @@ public class GameScreen extends Container {
 		
 		//set the card layout
 		SetupGame sg = new SetupGame();
-		JPanel card1 = sg.getFoodChainPanel();
-		JPanel card2 = sg.getQuestionPanel();
+		PyramidMasterPanel card1 = sg.getFoodChainPanel();
+		JPanel card2 = sg.getQuestionPanel(card1);
 		
 		center.setLayout(new CardLayout());
 		center.add(card1, "1");
