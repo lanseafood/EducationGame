@@ -245,4 +245,29 @@ public class QuestionPanel extends JScrollPane{
 		return false;
 	}
 	
+	
+	private boolean compareAnswers(String s1, String s2) {
+		// Build string 1
+		String[] s1_frags = s1.trim().toLowerCase().split("/s+");
+		for (int i = 0; i < s1_frags.length; i++)
+			if (s1_frags[i].matches("[0-9]+"))
+				s1_frags[i] = NumbersToWords.convert(Long.parseLong(s1_frags[i]));
+		
+		StringBuilder build1 = new StringBuilder();
+		for (String s :  s1_frags)
+			build1.append(s);
+		
+		// Build string 2
+		String[] s2_frags = s2.trim().toLowerCase().split("/s+");
+		for (int i = 0; i < s2_frags.length; i++)
+			if (s2_frags[i].matches("[0-9]+"))
+				s2_frags[i] = NumbersToWords.convert(Long.parseLong(s2_frags[i]));
+		
+		StringBuilder build2 = new StringBuilder();
+		for (String s :  s2_frags)
+			build2.append(s);
+		
+		// Return match
+		return build1.toString().equals(build2.toString());
+	}
 }
