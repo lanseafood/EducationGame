@@ -134,6 +134,21 @@ public class PopulateDatabase
 		
 		db.print_Ecology();
 		db.print_QAs();
+		
+		db.add_Relation(1, "2 3 6");
+		db.add_Relation(2, "1 4 7");
+		db.add_Relation(3, "4 5 6");
+		db.add_Relation(4, "3 5 7");
+		db.add_Relation(5, "3 4 8");
+		db.add_Relation(6, "3 7 8");
+		db.add_Relation(7, "8 9 10");
+		db.add_Relation(8, "7 9 10");
+		db.add_Relation(9, "7 8 10");
+		db.add_Relation(10, "7 8 9");
+		db.add_Relation(11, "12 13 14");
+		db.add_Relation(12, "11 13 14");
+		db.add_Relation(13, "11 12 14");
+		db.add_Relation(14, "11 12 13");
 	} catch ( Exception e ) {
       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
       System.exit(0);
