@@ -13,33 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class SetupGame{
-	List<String> ecology = new ArrayList<String>();
-	public PyramidMasterPanel getFoodChainPanel() {
-		//TODO: change this to read from database
-		ecology = Arrays.asList("King Vulture", "Lion", "Elephant", "Giraffe", "Acacia", "Baobab");
-		
-		PyramidMasterPanel panel = new PyramidMasterPanel("Simba", ecology); //JPanel();
-		
-		return panel;
-	}
-	
-	public ProfilePanel getQuestionPanel(PyramidMasterPanel p) {
-		
-		SQLiteJDBC db = new SQLiteJDBC();
-		String data = "";
-		try {
-			data = db.get_Question_Data(p.username);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		ProfilePanel panel = new ProfilePanel(p.username, null, data);
-		
-		
-		//panel.add(profPanel);
-		return panel;
-	}
-	
-	
+	List<String> ecology = ecology = Arrays.asList("Lion", "Elephant", "Giraffe", "Baobab");
+	String username = "Simba";
+
 }

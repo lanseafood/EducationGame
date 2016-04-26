@@ -1,9 +1,12 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +17,7 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 
 
 public class QuestionPanel extends JScrollPane{
@@ -37,12 +42,13 @@ public class QuestionPanel extends JScrollPane{
 	
 	public String animalName;
 	
-	PyramidMasterPanel parent;
+	GameScreen parent;
 	
 	HashMap<String, Integer> questionsAnswered;
 	
 	
-	public QuestionPanel(String animalName, String username, PyramidMasterPanel parent){
+	public QuestionPanel(String animalName, String username, GameScreen parent){
+
 		this.parent = parent;
 		this.username = username;
 		this.animalName = animalName;
@@ -51,6 +57,53 @@ public class QuestionPanel extends JScrollPane{
 		questionIDs = new HashMap<String, Integer>();
 		JPanel panel = new JPanel();
 		
+		JLabel header = new JLabel();
+		header.setText("Hi!");
+
+		GroupLayout layout = new GroupLayout(panel);
+        panel.setLayout(layout);
+        
+
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        
+		
+		if (animalName == null){
+			header.setText("d");
+			
+
+			
+			BufferedImage image = new BufferedImage ( Utilities.east_width, 1, BufferedImage.TYPE_INT_ARGB );
+
+			ImageIcon icon = new ImageIcon(image);
+			
+
+			JLabel bum = new JLabel();
+			bum.setIcon(icon);
+			
+			layout.setHorizontalGroup(
+				    layout.createSequentialGroup()
+				        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				            .addComponent(header)
+				            .addComponent(bum)
+
+				            ));
+			
+			layout.setVerticalGroup(
+				    layout.createSequentialGroup()
+				        .addGroup(layout.createSequentialGroup()
+				            .addComponent(header)
+				            .addComponent(bum)
+				            ));	
+			
+	        
+			this.setViewportView(bum);
+			
+			return;
+		}
+		
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
 		SQLiteJDBC db = new SQLiteJDBC();
 		try {
 			
@@ -74,10 +127,7 @@ public class QuestionPanel extends JScrollPane{
 			animalName = "";
 			e.printStackTrace();
 		}
-		
-		BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
-		panel.setLayout(box);
-		
+
 
     	JPanel imagePanel = new JPanel();
     	JLabel label = new JLabel();
@@ -114,7 +164,9 @@ public class QuestionPanel extends JScrollPane{
     	label.setIcon(icon);
     	imagePanel.add(label);
     	
-    	panel.add(imagePanel);
+    	
+    	
+    	panel2.add(imagePanel);
     	
 		
 		if (parent.finishedAnimals.contains(animalName)){
@@ -136,7 +188,7 @@ public class QuestionPanel extends JScrollPane{
 			
 		});
 		
-		final JPanel par = panel;
+		final JPanel par = panel2;
 		Iterator<String> iter = QAPairs.keySet().iterator();
 		
 		for (int i = 1; iter.hasNext(); ++i){
@@ -162,7 +214,8 @@ public class QuestionPanel extends JScrollPane{
 			final String answer = QAPairs.get(question);
 			
 			//TODO: Remove this 
-			//ansSpot.setText(answer);
+			System.out.println(answer);
+			ansSpot.setText(answer);
 			answerButton.setText("Submit");
 			ansSpot.setDisabledTextColor(Color.BLACK);
 			
@@ -213,14 +266,29 @@ public class QuestionPanel extends JScrollPane{
 			par.add(questionContainer);
 
 		}
+
+		layout.setHorizontalGroup(
+			    layout.createSequentialGroup()
+			        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+			            .addComponent(header)
+			            .addComponent(panel2)
+			            .addComponent(test)
+			            ));
 		
+		layout.setVerticalGroup(
+			    layout.createSequentialGroup()
+			        .addGroup(layout.createSequentialGroup()
+			            .addComponent(header)
+			            .addComponent(panel2)
+			            .addComponent(test)
+			            ));	
 		
-		panel.add(test);
+        layout.linkSize(SwingConstants.HORIZONTAL, panel2, header, test);
 		this.setViewportView(panel);
 		this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 	}
 	
-	public boolean allAnswered(String animalName, PyramidMasterPanel parent){
+	public boolean allAnswered(String animalName, GameScreen parent){
 		SQLiteJDBC db = new SQLiteJDBC();
 		int i = 0;
 		try {
@@ -244,5 +312,24 @@ public class QuestionPanel extends JScrollPane{
 		
 		return false;
 	}
+	
+	
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        Image image;
+    	try {
+			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
+			image = image.getScaledInstance(Utilities.east_width, 1, 0);
+			g.drawImage(image, 0, 0, this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("oops");
+
+		}
+
+    }
+	
 	
 }
