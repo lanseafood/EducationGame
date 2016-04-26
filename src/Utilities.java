@@ -13,10 +13,13 @@ public class Utilities {
 	static int big_width = 300;
 	static int small_width = 75;
 	
+	static int west_width = 350;
+	static int east_width = 350;
+	
 	// Given a user, produces an arraylist indicating which questions have been properly answered.
 	// Uses 0-indexing, so Question 1 is at index 0. 
 	
-	public static void saveGame(PyramidMasterPanel p){
+	public static void saveGame(GameScreen p){
 		try {
 			Utilities.updateAnswers(p.username, p.answeredIDs);
 		} catch (SQLException e) {
@@ -26,7 +29,7 @@ public class Utilities {
 		}
 	}
 	
-	public static void loadGame(PyramidMasterPanel p, String username){
+	public static void loadGame(GameScreen p, String username){
 		try {
 			p.answeredIDs = Utilities.decodeAnswers(username);
 			System.out.println(p.answeredIDs);
@@ -71,7 +74,7 @@ public class Utilities {
 		}
 	}
 	
-	public static boolean checkAnimalCleared(PyramidMasterPanel p, String animal){
+	public static boolean checkAnimalCleared(GameScreen p, String animal){
 		SQLiteJDBC db = new SQLiteJDBC();
 		
 		try {
@@ -118,6 +121,41 @@ public class Utilities {
 	
 	// Produces and sends a bit-string corresponding to the answered questions. 
 	// The ====left bit==== corresponds to Question 1. 
+	public static String getDataString(String user, HashMap<Integer, Boolean> answered) throws SQLException{
+		
+		Iterator<Integer> iter = answered.keySet().iterator();
+
+		SQLiteJDBC db = new SQLiteJDBC();
+		int count = db.get_Num_QAs();
+		
+		
+		char[] vals = new char[count];
+		
+		while (iter.hasNext()){
+			Integer qNum = iter.next();
+			if (answered.get(qNum) == true){
+				vals[qNum-1] = 1;
+			}
+			
+		}
+		
+		int i = 0; 
+		while (i < count){
+			// for proper utf-16 values
+			if (vals[i] == 0){
+				vals[i] = '0';
+			} else {
+				vals[i] = '1';
+			}
+		
+			i++;
+		}
+		
+		return String.valueOf(vals);
+		
+		
+	}
+	
 	public static void updateAnswers(String user, HashMap<Integer, Boolean> answered) throws SQLException{
 		
 		Iterator<Integer> iter = answered.keySet().iterator();
@@ -152,6 +190,7 @@ public class Utilities {
 		
 		db.set_Question_Data(user, answer);
 	}
+	
 	
     public static void drawCenteredText(Graphics g, int x, int y, float size, String text) {
     	// Create a new font with the desired size

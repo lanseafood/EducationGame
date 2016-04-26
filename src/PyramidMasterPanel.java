@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class PyramidMasterPanel extends JPanel {
 
-	
+	/*
 	public PyramidPanel pyramidPanel;
 	public JComponent questionPanel;
 	public String username;
@@ -70,5 +70,5 @@ public class PyramidMasterPanel extends JPanel {
 		revalidate();
 	}
 	
-	
+	*/
 }
