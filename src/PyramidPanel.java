@@ -2,12 +2,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -31,7 +36,7 @@ public class PyramidPanel extends JPanel {
     
     Point[] startingPoints;
     
-    PyramidMasterPanel parent; 
+    GameScreen parent; 
     HashMap<String, Boolean> moveCircle;
     HashMap<String, Point> originalLocations;
     
@@ -43,6 +48,8 @@ public class PyramidPanel extends JPanel {
     
     HashMap<String, Image> animalImages;
     
+    BufferedImage image;
+    TexturePaint tex;
     
     private final class MouseDrag extends MouseAdapter {
         private boolean dragging = false;
@@ -122,8 +129,18 @@ public class PyramidPanel extends JPanel {
     }
 
 
-    public PyramidPanel(String username, List<String> l, PyramidMasterPanel parent) {
+    public PyramidPanel(String username, List<String> l, GameScreen parent) {
+    	try {
+			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
+			Rectangle rect = new Rectangle();
+			rect.setBounds(0, 0, image.getWidth(), image.getHeight());
+			tex = new TexturePaint(image, rect);
+    	} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 
+ 
     	originalLocations = new HashMap<String, Point>();
     	animalImages = new HashMap<String, Image>();
     	
@@ -283,8 +300,14 @@ public class PyramidPanel extends JPanel {
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawCenteredText(g, getWidth()/2, 500, 20 , "Drag and drop organisms to their correct trophic levels!");
-        
-        //draw the food chain
+		
+		Graphics2D g2d = (Graphics2D) g;
+		Paint oldPaint = g2d.getPaint();
+		g2d.setPaint(tex);
+		g2d.fillRect(0, 0, getWidth(), getHeight());
+		g2d.setPaint(oldPaint);
+		 
+		//draw the food chain
         // Top polygon is always a triangle. Bottom polygon is always a trapezoid. 
         
         int length = pyramids.size();

@@ -1,8 +1,13 @@
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -98,4 +103,21 @@ public class WatsonPanel extends JPanel{
 		add(submit);
 		
 	}
+	
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Image image;
+    	try {
+			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
+			image = image.getScaledInstance(Utilities.big_width, Utilities.big_width, 0);
+			g.drawImage(image, 0, 0, this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("oops");
+
+		}
+
+    }
+	
 }
