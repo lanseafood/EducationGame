@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -24,7 +26,9 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class PyramidPanel extends JPanel {
 	
@@ -46,10 +50,21 @@ public class PyramidPanel extends JPanel {
     private MouseDrag mouseDrag;
     
     
+    Image sparkle;
+    boolean sparkleReady = false;
+    Point sparklePoint = new Point();
+    long startTime;
+    long lastTime;
+    static long SPARKLE_TIMER = 750;
+    
     HashMap<String, Image> animalImages;
     
-    BufferedImage image;
+    BufferedImage backimage, pyramidRef;
+    Image pyramidImage;
     TexturePaint tex;
+    
+    boolean resized = false;
+    float prop = 1;
     
     private final class MouseDrag extends MouseAdapter {
         private boolean dragging = false;
@@ -93,6 +108,33 @@ public class PyramidPanel extends JPanel {
         			moveCircle.put(lastAnimal, false);
         			System.out.println(lastAnimal + " is in correct spot!");
         			
+        			parent.produceQuestionPanel(lastAnimal);
+        			
+        			// Ready animation!!!!!!!!!!!
+        			
+
+        			startTime = System.currentTimeMillis();
+        			
+        			
+        			Timer timer = new Timer(0, new ActionListener() {
+        			    public void actionPerformed(ActionEvent evt) {
+        				
+        			    	lastTime = System.currentTimeMillis();
+        			    	
+        			    	sparkleReady = true;
+        			    	sparklePoint = newPoint;
+        			    	
+        			    	if (lastTime - startTime > SPARKLE_TIMER){
+        			    		sparkleReady = false;
+        			    		((Timer)evt.getSource()).stop();
+        			    	}
+        			    	
+        			    }    
+        			});
+        			
+        			timer.setRepeats(true);
+        			timer.start();
+        			
         			parent.correctlyPlacedAnimals.add(lastAnimal);
         			
         			int randomIndex = (int) Math.floor(allAnimalNames.size() * Math.random());
@@ -105,6 +147,8 @@ public class PyramidPanel extends JPanel {
         				originalLocations.put(newAnimal, oldPoint);
         				allAnimalNames.remove(newAnimal);
         				moveCircle.put(newAnimal, true);
+        				
+        				
         				
         			}
         			
@@ -131,10 +175,14 @@ public class PyramidPanel extends JPanel {
 
     public PyramidPanel(String username, List<String> l, GameScreen parent) {
     	try {
-			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
+			backimage = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
 			Rectangle rect = new Rectangle();
-			rect.setBounds(0, 0, image.getWidth(), image.getHeight());
-			tex = new TexturePaint(image, rect);
+			rect.setBounds(0, 0, backimage.getWidth(), backimage.getHeight());
+			tex = new TexturePaint(backimage, rect);
+			
+			
+			
+			
     	} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -168,7 +216,8 @@ public class PyramidPanel extends JPanel {
     	
     	
     	
-    	
+    	sparkle = (new ImageIcon("assets/animations/sparkle.gif")).getImage();
+        
     	
     	this.parent = parent;
     	
@@ -306,7 +355,8 @@ public class PyramidPanel extends JPanel {
 		g2d.setPaint(tex);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 		g2d.setPaint(oldPaint);
-		 
+		
+
 		//draw the food chain
         // Top polygon is always a triangle. Bottom polygon is always a trapezoid. 
         
@@ -318,25 +368,44 @@ public class PyramidPanel extends JPanel {
         	
         }
         
+    	
+		// Add pyramid graphic:::: 
+
+    	float topBuffer = 200;
+    	if (!resized){
+    		try {
+				pyramidRef = (BufferedImage) ImageIO.read(new File("assets/FINALPYRAMID.png"));
+				prop = (this.getHeight() - topBuffer) / pyramidRef.getHeight();
+				
+				
+				pyramidImage = pyramidRef.getScaledInstance((int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop), 0);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		resized = true;
+    	}
+		g.drawImage(pyramidImage,  (int) (this.getWidth() - (pyramidRef.getWidth() * prop)) / 2, 100,(int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop),null);
+
+		
         
         //draw the ecology options
         Iterator<String> iter = moveCircle.keySet().iterator();
         while (iter.hasNext()) {
         	String name = iter.next();
-        	if (!moveCircle.get(name)){
-        		g.setColor(Color.GREEN);
-        	}
-        	Point p = ellipsePoints.get(name);
-        	if (p != null){
-        		g.drawOval((int) p.getX(), (int) p.getY(), width, height);
-        		
-        		if (animalImages.get(name) != null){
-            		g.drawImage(animalImages.get(name), (int) p.getX(), (int) p.getY(), width, height, null);
-            	}
-            	else {
-            		drawCenteredText(g, (int) p.getX() +(width/2), (int) p.getY() +(height/2), 10 , name);
+        	if (moveCircle.get(name)){
+        		Point p = ellipsePoints.get(name);
+            	if (p != null){
+          
+            		if (animalImages.get(name) != null){
+                		g.drawImage(animalImages.get(name), (int) p.getX(), (int) p.getY(), width, height, null);
+                	}
+                	else {
+                		drawCenteredText(g, (int) p.getX() +(width/2), (int) p.getY() +(height/2), 10 , name);
+                	}
             	}
         	}
+        	
         	
         	
         	
@@ -344,7 +413,18 @@ public class PyramidPanel extends JPanel {
         	
         	g.setColor(Color.BLACK);
         	
+
         }
+        if (sparkleReady){
+        	
+        	int width = sparkle.getWidth(null);
+        	int height = sparkle.getWidth(null);
+        	
+        	g.drawImage(sparkle, sparklePoint.x - width/2, sparklePoint.y - height/2, this);
+        	
+        	
+        }
+
     }
     
     public static void drawCenteredText(Graphics g, int x, int y, float size, String text) {
@@ -364,5 +444,7 @@ public class PyramidPanel extends JPanel {
 
     	g.drawString(text, cornerX, cornerY);  // Draw the string.
     	}
+    
+    
 
 }

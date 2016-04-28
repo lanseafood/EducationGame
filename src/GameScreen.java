@@ -121,8 +121,7 @@ public class GameScreen extends JPanel {
 	}
 	
 	public void produceTrophicMemberPanel(int trophicLevel){
-		
-		
+
 		if (westPanel != null)
 			this.remove(westPanel);
 		westPanel = new TrophicMemberPanel(trophicLevel, this);

@@ -24,9 +24,11 @@ import javax.swing.ScrollPaneConstants;
 
 public class TrophicMemberPanel extends JScrollPane{
 
+	GameScreen parent;
 	public TrophicMemberPanel(int trophicLevel, GameScreen parent){
 		
-
+		
+		this.parent = parent;
 		JPanel outerPanel = new JPanel(){ 
 		    @Override
 		    protected void paintComponent(Graphics g) {
@@ -50,7 +52,7 @@ public class TrophicMemberPanel extends JScrollPane{
 		outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
 		
-		if (trophicLevel == -1){
+		if (trophicLevel == -1 || this.getTrophicLevelMembersAnswered(trophicLevel) == 0){
 			JLabel label = new JLabel();
 			BufferedImage image = new BufferedImage ( Utilities.east_width, 1, BufferedImage.TYPE_INT_ARGB );
 
@@ -139,6 +141,24 @@ public class TrophicMemberPanel extends JScrollPane{
 			
 	}
 		return trophicLevel;
+	}
+	
+	public int getTrophicLevelMembersAnswered(int trophic){
+		SQLiteJDBC db = new SQLiteJDBC();
+		int count = 0;
+		Iterator<String> iter = this.parent.correctlyPlacedAnimals.iterator();
+		
+		try {
+			while (iter.hasNext()){
+				String animalName = iter.next();
+				if (getTrophicLevel(animalName) == trophic){
+					count++;
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return count;
 	}
 		
 		
