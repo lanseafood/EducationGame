@@ -34,6 +34,12 @@ public class PopulateDatabase
 		db.add_Ecology(12, "Elephant Grass", 1);
 		db.add_Ecology(13, "Baobab", 1);
 		db.add_Ecology(14, "River Bushwillow", 1);
+		db.add_Ecology(15, "Marabou Stork", 4);
+		db.add_Ecology(16, "Chameleon", 3);
+		db.add_Ecology(17, "Nile Crocodile", 3);
+		db.add_Ecology(18, "Koala", 2);
+		db.add_Ecology(19, "Leopard Tortoise", 2);
+		db.add_Ecology(20, "Jackalberry", 1);
 		
 		//add question and answers
 		//Vultures:
@@ -106,7 +112,38 @@ public class PopulateDatabase
 		db.add_QA(40, 14, "What type of climate does the river bushwillow normally grow in?", "Warm and dry");
 		db.add_QA(41, 14, "What family does the river bushwillow belong to?", "Combretum");
 		db.add_QA(42, 14, "What special type of root system does the bushwillow have?", "Hydrophilic");
+		
+		//Marabou Stork:
+		db.add_QA(43, 15, "True or false: The Marabou Stork is a solitary bird.", "False");
+		db.add_QA(44, 15, "How many eggs does the Marabou Stork lay at a time?", "2 - 3");
+		db.add_QA(45, 15, "What is the wingspan of the Marabou Stork?", "3 meters");
+		
+		//Chameleon:
+		db.add_QA(46, 16, "True or false: A chameleon does not need to drink any water.", "False");
+		db.add_QA(47, 16, "What is the gestation period for chameleons?", "4 - 6 months");
+		db.add_QA(48, 16, "What family does the chameleon belong to?", "Chamaeleonidae");
+		
+		//Nile Crocodile:
+		db.add_QA(49, 17, "How long can the Nile crocodile grow to be?", "6 m");
+		db.add_QA(50, 17, "How many eggs can a female Nile Crocodile lay at one time?", "60");
+		db.add_QA(51, 17, "What environmental factor determines the sex of a baby crocodile?", "Temperature");
 				
+		
+		//Koala:
+		db.add_QA(52, 18, "What is a baby Koala known as?", "Joey");
+		db.add_QA(53, 18, "How much do Koalas sleep per day?", "18-20 hours");
+		db.add_QA(54, 18, "What do you call the ‘snore-like’ sound that Koalas make?", "Bellow");
+		
+		//Leopard Tortoise:
+		db.add_QA(55, 19, "How long can an adult Leopard Tortoise grow to be?", "30 inches");
+		db.add_QA(56, 19, "How many years can a Leopard Tortoise live in the wild?", "50-100 years");
+		db.add_QA(57, 19, "True or false: Leopard Tortoises do not hibernate.", "True");
+		
+		//Jackalberry
+		db.add_QA(58, 20, "How tall does an average Jackalberry tree grow to be?", "15-18 feet");
+		db.add_QA(59, 20, "Which months do the leaves of the Jackalberry grow in?", "June-October");
+		db.add_QA(60, 20, "True or false: The fruit of the jackalberry grows only on female trees.", "True");
+		
 		
 		//add titles:
 		db.add_Title(1, "The Culture Vulture");
@@ -126,6 +163,13 @@ public class PopulateDatabase
 		db.add_Title(12, "Master of the Grass");
 		db.add_Title(13, "The Baobab Baboon");
 		db.add_Title(14, "The Whomping Rhino");
+		
+		db.add_Title(15, "The Stork Stalker");
+		db.add_Title(16, "Karma Chameleon");
+		db.add_Title(17, "Croc");
+		db.add_Title(18, "The Koala-fier");
+		db.add_Title(19, "The Slow Poke");
+		db.add_Title(20, "The Jackalberry Jester");
 		
 		db.add_Title(-1, "N00b");
 		db.add_Title(-2, "Novice");
