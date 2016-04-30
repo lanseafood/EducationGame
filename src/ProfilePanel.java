@@ -1,39 +1,33 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Point;
-import java.awt.Window;
+import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import com.sun.awt.AWTUtilities;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class ProfilePanel extends JPanel implements ActionListener {
 	
@@ -43,13 +37,13 @@ public class ProfilePanel extends JPanel implements ActionListener {
 	ArrayList<Boolean> answered;
 	public String animalName;
 	PyramidMasterPanel parent;
-	
+	JPanel header;
 	
 	JLabel scoreText;
 	JComboBox<String> titles;
 	
 	// Set values, can be scaled up as project expands
-	private int speciesCount = 14;
+	private int speciesCount = 20;
 	private int milestones = 2;
 	// assuming two milestones at present: 50% and 100% score
 	
@@ -67,7 +61,16 @@ public class ProfilePanel extends JPanel implements ActionListener {
 	HashMap<String, ImageIcon> animalSealImages;
 	HashMap<String, String> animalTitles;
 	JScrollPane j = new JScrollPane();
-	JPanel jp = new JPanel(new GridLayout(3, 5));
+	JPanel jp = new JPanel(new GridLayout(3, 5)){
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+
+	        Utilities.paintComponent(g, this);
+
+	        
+
+	    }
+	};
 	JLabel info;
 	// Pass in username, image icon, and data for user
 	// Get panel showing all information and allowing switch of user title
@@ -104,19 +107,24 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(box);
 		
-		JLabel hi = new JLabel("Hello " + username, null, JLabel.CENTER);
-//		JLabel user = new JLabel(username, image, JLabel.CENTER);
+		JLabel hi = new JLabel("Hello, " + username, null, JLabel.CENTER);
+		
+		hi.setFont(new Font("Bebas Neue", Font.TRUETYPE_FONT, 48));
+		
+		
 		info = new JLabel("You are nothing yet", null, JLabel.CENTER);
+		info.setFont(new Font("Bebas Neue", Font.TRUETYPE_FONT, 24));
 		scoreText = new JLabel();
+		scoreText.setFont(new Font("Bebas Neue", Font.TRUETYPE_FONT, 24));
 		
 		load();
 
-		//this.add(user);
-		//Border b = new EmptyBorder(500, 0, 100, 0);
-		//scoreText.setBorder(b);
-		this.add(hi);
-		this.add(info);
-		this.add(scoreText);
+		header = new JPanel();
+		header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+		header.add(hi);
+		header.add(info);
+		header.add(scoreText);
+		this.add(header);
 		j.add(jp);
 		j.setViewportView(jp);
 		j.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -184,9 +192,9 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		Collections.sort(titleIDs);
 		Collections.sort(lockedTitleIDs);
 //		System.out.println("THE ONES YOU FINISHED");
-		System.out.println(titleIDs);
+		//System.out.println(titleIDs);
 //		System.out.println("THE ONES NOT COMPLETED");
-		System.out.println(lockedTitleIDs);
+		//System.out.println(lockedTitleIDs);
 		scoreText.setText("Your score is " + score);
 		SQLiteJDBC db = new SQLiteJDBC();
 		try {
@@ -199,8 +207,8 @@ public class ProfilePanel extends JPanel implements ActionListener {
 					String animalSealName = animalName + "Seal";
 		        	ImageIcon sealImage = new ImageIcon();
 		        	Image tempI = null;
-		        	System.out.println("FINISHED animals");
-		        	System.out.println(animalName);
+		        	//System.out.println("FINISHED animals");
+		        	//System.out.println(animalName);
 		        	try {
 						tempI = ImageIO.read(new File("assets/IconSeals/" + animalSealName.toLowerCase() + ".png"));
 					} catch (IOException e1) {
@@ -218,12 +226,12 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		        	    public void mouseClicked(MouseEvent e) {
 //		        	    	String titleID = animalTitles.get(a.getName());
 		        	    	try {
-		        	    		System.out.println(db.get_Title(ID));
+		        	    		//System.out.println(db.get_Title(ID));
 								currentTitle = db.get_Title(ID);
 //								info = new JLabel(, null, JLabel.CENTER);
-		        	    		System.out.println(info);
+		        	    		//System.out.println(info);
 								info.setText("You are the " + currentTitle);
-		        	    		System.out.println(info);
+		        	    		//System.out.println(info);
 
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
@@ -240,18 +248,23 @@ public class ProfilePanel extends JPanel implements ActionListener {
 					String animalName = db.get_Ecology_Name(lockedTitleIDs.get(i));
 					String animalSealName = animalName + "Seal";
 		        	ImageIcon sealImage = new ImageIcon();
-		        	Image tempI = null;
-		        	System.out.println("locked animals");
-		        	System.out.println(animalName);
+		        	BufferedImage tempI = null;
+		        	 
+		        	//System.out.println("locked animals");
+		        	//System.out.println(animalName);
 		        	try {
 						tempI = ImageIO.read(new File("assets/IconSeals/" + animalSealName.toLowerCase() + ".png"));
-						tempI.getGraphics().setColor(Color.DARK_GRAY);
+						ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);  
+						ColorConvertOp op = new ColorConvertOp(cs, null);
+						
+						tempI = op.filter(tempI, null);
+						
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-		        	tempI = tempI.getScaledInstance(200, 200, 0);
-		        	sealImage.setImage(tempI);
+		        	Image tempIX = tempI.getScaledInstance(200, 200, 0);
+		        	sealImage.setImage(tempIX);
 		    		animalSealImages.put(animalName, sealImage);
 		    		
 		    		JLabel a = new JLabel();

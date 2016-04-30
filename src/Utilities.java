@@ -1,20 +1,54 @@
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import javax.imageio.ImageIO;
+import javax.swing.JComponent;
+
 
 public class Utilities {
 
 	static int big_width = 300;
-	static int small_width = 75;
+	static int small_width = 125;
 	
 	static int west_width = 350;
 	static int east_width = 350;
+	
+	static TexturePaint GRAYTEX, GREENTEX;
+	
+	
+	public static void paintComponent(Graphics g, JComponent j){
+		Graphics2D g2d = (Graphics2D) g;
+		Paint oldPaint = g2d.getPaint();
+		g2d.setPaint(Utilities.GRAYTEX);
+		g2d.fillRect(0, 0, j.getWidth(), j.getHeight());
+		g2d.setPaint(oldPaint);
+	}
+	
+	public static void paintComponent(Graphics g, JComponent j, int i){
+		Graphics2D g2d = (Graphics2D) g;
+		Paint oldPaint = g2d.getPaint();
+		
+		if (i == 1){
+			g2d.setPaint(Utilities.GREENTEX);
+		}
+		
+		g2d.fillRect(0, 0, j.getWidth(), j.getHeight());
+		g2d.setPaint(oldPaint);
+	}
+	
 	
 	// Given a user, produces an arraylist indicating which questions have been properly answered.
 	// Uses 0-indexing, so Question 1 is at index 0. 
@@ -30,6 +64,24 @@ public class Utilities {
 	}
 	
 	public static void loadGame(GameScreen p, String username){
+		
+		BufferedImage backimage;
+		try {
+			backimage = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
+			Rectangle rect = new Rectangle();
+			rect.setBounds(0, 0, backimage.getWidth(), backimage.getHeight());
+			GRAYTEX = new TexturePaint(backimage, rect);
+			
+			backimage = ImageIO.read(new File("assets/green_cup/green_cup.png"));
+			rect = new Rectangle();
+			rect.setBounds(0, 0, backimage.getWidth(), backimage.getHeight());
+			GREENTEX = new TexturePaint(backimage, rect);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		
 		try {
 			p.answeredIDs = Utilities.decodeAnswers(username);
 			System.out.println(p.answeredIDs);
@@ -64,7 +116,7 @@ public class Utilities {
 			}
 			
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			p.answeredIDs = new HashMap<Integer, Boolean>();
 			p.answered = new HashMap<String, Boolean>();
 			

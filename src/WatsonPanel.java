@@ -42,7 +42,17 @@ public class WatsonPanel extends JPanel{
 		JTextArea answerField = new JTextArea();
 		answerField.setColumns(40);
 		
-		JScrollPane answerPane = new JScrollPane(answerField);
+		JScrollPane answerPane = new JScrollPane(answerField){
+			@Override
+		    protected void paintComponent(Graphics g) {
+		        super.paintComponent(g);
+		        Utilities.paintComponent(g, this, 1);
+
+		    }
+		};
+		
+		
+		setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		
 		JButton submit = new JButton("Ask");
 		
@@ -107,16 +117,10 @@ public class WatsonPanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Image image;
-    	try {
-			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
-			image = image.getScaledInstance(Utilities.big_width, Utilities.big_width, 0);
-			g.drawImage(image, 0, 0, this);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("oops");
 
-		}
+        Utilities.paintComponent(g, this, 1);
+
+        
 
     }
 	
