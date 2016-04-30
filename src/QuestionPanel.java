@@ -1,12 +1,9 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +13,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -53,12 +54,22 @@ public class QuestionPanel extends JScrollPane{
 		this.username = username;
 		this.animalName = animalName;
 		
+		
+		
 		QAPairs = new HashMap<String, String>();
 		questionIDs = new HashMap<String, Integer>();
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(){
+			@Override
+		    protected void paintComponent(Graphics g) {
+		        super.paintComponent(g);
+		        Utilities.paintComponent(g, this);
+
+		    }
+		};
+		
+		panel.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		
 		JLabel header = new JLabel();
-		header.setText("Hi!");
 
 		GroupLayout layout = new GroupLayout(panel);
         panel.setLayout(layout);
@@ -69,7 +80,6 @@ public class QuestionPanel extends JScrollPane{
         
 		
 		if (animalName == null){
-			header.setText("d");
 			
 
 			
@@ -78,7 +88,14 @@ public class QuestionPanel extends JScrollPane{
 			ImageIcon icon = new ImageIcon(image);
 			
 
-			JLabel bum = new JLabel();
+			JLabel bum = new JLabel(){
+				@Override
+			    protected void paintComponent(Graphics g) {
+			        super.paintComponent(g);
+			        Utilities.paintComponent(g, this);
+
+			    }
+			};
 			bum.setIcon(icon);
 			
 			layout.setHorizontalGroup(
@@ -102,7 +119,14 @@ public class QuestionPanel extends JScrollPane{
 			return;
 		}
 		
-		JPanel panel2 = new JPanel();
+		JPanel panel2 = new JPanel(){
+			@Override
+		    protected void paintComponent(Graphics g) {
+		        super.paintComponent(g);
+		        Utilities.paintComponent(g, this);
+
+		    }
+		};
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
 		SQLiteJDBC db = new SQLiteJDBC();
 		try {
@@ -129,7 +153,14 @@ public class QuestionPanel extends JScrollPane{
 		}
 
 
-    	JPanel imagePanel = new JPanel();
+    	JPanel imagePanel = new JPanel(){
+    		@Override
+    	    protected void paintComponent(Graphics g) {
+    	        super.paintComponent(g);
+    	        Utilities.paintComponent(g, this);
+
+    	    }
+    	};
     	JLabel label = new JLabel();
     	
     	Image image;
@@ -193,19 +224,37 @@ public class QuestionPanel extends JScrollPane{
 		
 		for (int i = 1; iter.hasNext(); ++i){
 			
-			JPanel questionContainer = new JPanel();
+			JPanel questionContainer = new JPanel(){
+				@Override
+			    protected void paintComponent(Graphics g) {
+			        super.paintComponent(g);
+			        Utilities.paintComponent(g, this);
+
+			    }
+			};
 			questionContainer.setLayout(new BoxLayout(questionContainer, BoxLayout.Y_AXIS));
 
 			
 			String question = iter.next();
 		
-			JTextField field = new JTextField();
+			JTextArea field = new JTextArea();
+			field.setBackground(Color.LIGHT_GRAY);
+			field.setColumns(30);
+			field.setLineWrap(true);
+			
 			field.setText("Question " + (i) + ": " + question);
 			field.setEditable(false);
 			
 			questionContainer.add(field);
 			
-			JPanel answerSlot = new JPanel();
+			JPanel answerSlot = new JPanel(){
+				@Override
+			    protected void paintComponent(Graphics g) {
+			        super.paintComponent(g);
+			        Utilities.paintComponent(g, this);
+
+			    }
+			};
 			answerSlot.setLayout(new FlowLayout());
 			final JTextField ansSpot = new JTextField();
 			ansSpot.setColumns(20);
@@ -225,6 +274,7 @@ public class QuestionPanel extends JScrollPane{
 				ansSpot.setEnabled(false);
 				ansSpot.setText(answer);
 				ansSpot.setDisabledTextColor(Color.BLACK);
+				parent.feedbackLabel.setText("You've finished this animal already!");
 			}
 			else{
 				final String copyName = new String(animalName);
@@ -233,6 +283,10 @@ public class QuestionPanel extends JScrollPane{
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						String ansGiven = ansSpot.getText();
+						
+						if (!ansGiven.equals(answer)){
+							parent.feedbackLabel.setText("Try again! Ask Watson if you need help!");
+						}
 						if (ansGiven.equals(answer)){
 							questionContainer.setBackground(Color.GREEN);
 							answerSlot.setBackground(Color.GREEN);
@@ -241,14 +295,33 @@ public class QuestionPanel extends JScrollPane{
 							int id = questionIDs.get(question);
 							parent.answeredIDs.put(id, true);
 							Utilities.saveGame(parent);
-							
+							parent.feedbackLabel.setText("Correct answer!");
 							
 							ansSpot.setEnabled(false);
+							String soundName = "";
 							if (allAnswered(copyName, parent)){
+								soundName = "assets/sounds/e71020_short-a.wav";   
 								parent.finishedAnimals.add(copyName);
 								imagePanel.setOpaque(true);
 								imagePanel.setBackground(Color.GREEN);
+								parent.feedbackLabel.setText("You've unlocked a title!! Check it out in your Profile page.");
+							} else {
+								soundName = "assets/sounds/e71026_short-g.wav";    
 							}
+							
+							
+							
+							try {
+								AudioInputStream audioInputStream;
+								audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+								Clip clip = AudioSystem.getClip();
+								clip.open(audioInputStream);
+								clip.start();
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
 							
 						}
 						
@@ -314,20 +387,10 @@ public class QuestionPanel extends JScrollPane{
 	}
 	
 	
-    @Override
+	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        Image image;
-    	try {
-			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
-			image = image.getScaledInstance(Utilities.east_width, 1, 0);
-			g.drawImage(image, 0, 0, this);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("oops");
-
-		}
+        Utilities.paintComponent(g, this);
 
     }
 	

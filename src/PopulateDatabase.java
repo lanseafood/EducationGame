@@ -17,7 +17,7 @@ public class PopulateDatabase
 		db.add_User("Simba");
 		
 		//set question data
-		db.set_Question_Data("Simba", "000000000000000000000000000000000000000000");
+		db.set_Question_Data("Simba", "000000000000000000000000000000000000000000000000000000000000");
 				
 		//add organisms
 		db.add_Ecology(1, "King Vulture", 4);
@@ -132,7 +132,7 @@ public class PopulateDatabase
 		//Koala:
 		db.add_QA(52, 18, "What is a baby Koala known as?", "Joey");
 		db.add_QA(53, 18, "How much do Koalas sleep per day?", "18-20 hours");
-		db.add_QA(54, 18, "What do you call the ‘snore-like’ sound that Koalas make?", "Bellow");
+		db.add_QA(54, 18, "What do you call the 窶�snore-like窶� sound that Koalas make?", "Bellow");
 		
 		//Leopard Tortoise:
 		db.add_QA(55, 19, "How long can an adult Leopard Tortoise grow to be?", "30 inches");

@@ -7,10 +7,10 @@ import java.awt.Image;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -46,25 +49,32 @@ public class PyramidPanel extends JPanel {
     
     private int width = Utilities.small_width;
     private int height = Utilities.small_width;
+    
+    boolean firstDone = false;
 
     private MouseDrag mouseDrag;
     
     
     Image sparkle;
-    boolean sparkleReady = false;
+    boolean sparkleReady;
     Point sparklePoint = new Point();
     long startTime;
     long lastTime;
-    static long SPARKLE_TIMER = 750;
+    static long SPARKLE_TIMER = 1000;
     
     HashMap<String, Image> animalImages;
     
-    BufferedImage backimage, pyramidRef;
-    Image pyramidImage;
-    TexturePaint tex;
     
-    boolean resized = false;
+	float topBuffer = Utilities.small_width;
+    BufferedImage pyramidRef;
+    Image pyramidImage;
+
+    
+    boolean resized;
     float prop = 1;
+    
+    
+    
     
     private final class MouseDrag extends MouseAdapter {
         private boolean dragging = false;
@@ -78,9 +88,10 @@ public class PyramidPanel extends JPanel {
             lastAnimal = isInsideEllipse(last);
             
             // Check if in trophic thingy
-            if (lastAnimal.equals("")){
+            if (lastAnimal == null || lastAnimal.equals("")){
             	int trophic = isInsideShape(last);
             	parent.produceTrophicMemberPanel(trophic);
+            	return;
             }
             
             
@@ -106,23 +117,44 @@ public class PyramidPanel extends JPanel {
         		if (newNumber != -1 && ellipseTrophicLevel(lastAnimal) == newNumber) {//ie, it has stopped inside a circle of the food chain
         			//ecologyAnswers.set(newNumber, ecology.get(newNumber));
         			moveCircle.put(lastAnimal, false);
+        			ellipsePoints.remove(lastAnimal);
         			System.out.println(lastAnimal + " is in correct spot!");
         			
         			parent.produceQuestionPanel(lastAnimal);
         			
+        			if (!firstDone){
+        				firstDone = true;
+        				parent.feedbackLabel.setText("Great!! Click on the pyramid block to see ones you've dragged correctly.");
+        			}
+        			
+        			else {
+        				parent.feedbackLabel.setText("That's correct!!");
+        			}
+        			
         			// Ready animation!!!!!!!!!!!
         			
 
+					try {
+						String soundName = "assets/sounds/e73003_se-b02.wav";
+						AudioInputStream audioInputStream;
+						audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+						Clip clip = AudioSystem.getClip();
+						clip.open(audioInputStream);
+						clip.start();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
         			startTime = System.currentTimeMillis();
-        			
+			    	sparkleReady = true;
+			    	sparklePoint = newPoint;
         			
         			Timer timer = new Timer(0, new ActionListener() {
         			    public void actionPerformed(ActionEvent evt) {
         				
         			    	lastTime = System.currentTimeMillis();
         			    	
-        			    	sparkleReady = true;
-        			    	sparklePoint = newPoint;
+
         			    	
         			    	if (lastTime - startTime > SPARKLE_TIMER){
         			    		sparkleReady = false;
@@ -174,23 +206,56 @@ public class PyramidPanel extends JPanel {
 
 
     public PyramidPanel(String username, List<String> l, GameScreen parent) {
-    	try {
-			backimage = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
-			Rectangle rect = new Rectangle();
-			rect.setBounds(0, 0, backimage.getWidth(), backimage.getHeight());
-			tex = new TexturePaint(backimage, rect);
-			
-			
-			
-			
-    	} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
 
+    	resized = true;
+    	this.addComponentListener(new ComponentListener(){
+
+			@Override
+			public void componentHidden(ComponentEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void componentResized(ComponentEvent arg0) {
+				resized = true;
+				
+			}
+
+			@Override
+			public void componentShown(ComponentEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+    		
+    	});
+
+    	
+    	try {
+			pyramidRef = (BufferedImage) ImageIO.read(new File("assets/FINALPYRAMID.png"));
+			prop = (this.getHeight() - topBuffer) / pyramidRef.getHeight();
+
+				
+			pyramidImage = pyramidRef.getScaledInstance((int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop), 0);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+    	
+    	
+    	
  
     	originalLocations = new HashMap<String, Point>();
     	animalImages = new HashMap<String, Image>();
+    	
+    	sparkleReady = false;
     	
     	SQLiteJDBC db = new SQLiteJDBC();
     	try {
@@ -222,55 +287,13 @@ public class PyramidPanel extends JPanel {
     	this.parent = parent;
     	
     	ellipsePoints = new HashMap<String, Point>();
-    	startingPoints = new Point[7];
-    	startingPoints[0] = new Point(400, 25);
-    	startingPoints[1] = new Point(400, 100);
-    	startingPoints[2] = new Point(400, 175);
-    	startingPoints[3] = new Point(400, 250);
-    	startingPoints[4] = new Point(400, 325);
-    	startingPoints[5] = new Point(400, 400);
-    	startingPoints[6] = new Point(400, 475);
+    	startingPoints = new Point[4];
+    	startingPoints[0] = new Point(0, 0);
+    	startingPoints[1] = new Point(4 * Utilities.small_width/2, 0);
+    	startingPoints[2] = new Point(8 * Utilities.small_width/2, 0);
+    	startingPoints[3] = new Point(12 * Utilities.small_width/2, 0);
     	
-    	Point[] poly1 = {new Point(50, 400), new Point(350, 400), new Point(300, 300), new Point(100, 300)};
-    	Polygon p1 = new Polygon();
-    	int j = 0;
-    	while (j < poly1.length){
-    		p1.addPoint((int) poly1[j].getX(), (int) poly1[j].getY());
-    		j++;
-    	}
-    	
-    	
-    	
-    	Point[] poly2 = {new Point(100, 300), new Point(300, 300), new Point(250, 200), new Point(150, 200)};
-    	Polygon p2 = new Polygon();
-    	j = 0;
-    	while (j < poly2.length){
-    		p2.addPoint((int) poly2[j].getX(), (int) poly2[j].getY());
-    		j++;
-    	}
-    	
-    	
-    	Point[] poly3 = {new Point(150, 200), new Point(250, 200), new Point(200, 100)};
-    	Polygon p3 = new Polygon();
-    	j = 0;
-    	while (j < poly3.length){
-    		p3.addPoint((int) poly3[j].getX(), (int) poly3[j].getY());
-    		j++;
-    	}
-    	
-    	Point[] poly4 = {new Point(50, 400), new Point(350, 400), new Point(400, 500), new Point(00, 500)};
-    	Polygon p4 = new Polygon();
-    	j = 0;
-    	while (j < poly4.length){
-    		p4.addPoint((int) poly4[j].getX(), (int) poly4[j].getY());
-    		j++;
-    	}
-    	
-    	pyramids.add(p4);
-    	pyramids.add(p1);
-    	pyramids.add(p2);
-    	pyramids.add(p3);
-    	
+
     	
     	long seed = System.nanoTime();
     	Collections.shuffle(l, new Random(seed));
@@ -320,6 +343,9 @@ public class PyramidPanel extends JPanel {
     	while (iter.hasNext()) {
     		String name = iter.next();
     		Point p = ellipsePoints.get(name);
+    		if (p == null){
+    			return null;
+    		}
     		if( new Ellipse2D.Float(p.x, p.y, width, height).contains(point))
     			circleName = name;
     	}
@@ -352,7 +378,7 @@ public class PyramidPanel extends JPanel {
 		
 		Graphics2D g2d = (Graphics2D) g;
 		Paint oldPaint = g2d.getPaint();
-		g2d.setPaint(tex);
+		g2d.setPaint(Utilities.GRAYTEX);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 		g2d.setPaint(oldPaint);
 		
@@ -360,6 +386,30 @@ public class PyramidPanel extends JPanel {
 		//draw the food chain
         // Top polygon is always a triangle. Bottom polygon is always a trapezoid. 
         
+		// Add pyramid graphic:::: 
+
+    	float topBuffer = Utilities.small_width;
+    	if (resized){
+
+			prop = (this.getHeight() - topBuffer) / pyramidRef.getHeight();	
+			pyramidImage = pyramidRef.getScaledInstance((int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop), 0);
+    		resized = false;
+    		
+    		pyramids = new ArrayList<Polygon>();
+        	Polygon[] polys = this.findPolygons(pyramidImage);
+        	pyramids.add(polys[3]);
+        	pyramids.add(polys[2]);
+        	pyramids.add(polys[1]);
+        	pyramids.add(polys[0]);
+        	
+        	
+        	System.out.println(polys[0].xpoints[0]);
+        	System.out.println(prop);
+    	}
+		g.drawImage(pyramidImage,  (int) (this.getWidth() - (pyramidRef.getWidth() * prop)) / 2, (int) this.topBuffer,(int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop),null);
+
+	
+		/*
         int length = pyramids.size();
         
         for (int i = 0; i < length; ++i){
@@ -368,26 +418,8 @@ public class PyramidPanel extends JPanel {
         	
         }
         
-    	
-		// Add pyramid graphic:::: 
-
-    	float topBuffer = 200;
-    	if (!resized){
-    		try {
-				pyramidRef = (BufferedImage) ImageIO.read(new File("assets/FINALPYRAMID.png"));
-				prop = (this.getHeight() - topBuffer) / pyramidRef.getHeight();
-				
-				
-				pyramidImage = pyramidRef.getScaledInstance((int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop), 0);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		resized = true;
-    	}
-		g.drawImage(pyramidImage,  (int) (this.getWidth() - (pyramidRef.getWidth() * prop)) / 2, 100,(int) (pyramidRef.getWidth() * prop), (int) (pyramidRef.getHeight() * prop),null);
-
-		
+    	*/
+	
         
         //draw the ecology options
         Iterator<String> iter = moveCircle.keySet().iterator();
@@ -417,6 +449,7 @@ public class PyramidPanel extends JPanel {
         }
         if (sparkleReady){
         	
+        	
         	int width = sparkle.getWidth(null);
         	int height = sparkle.getWidth(null);
         	
@@ -445,6 +478,49 @@ public class PyramidPanel extends JPanel {
     	g.drawString(text, cornerX, cornerY);  // Draw the string.
     	}
     
+    
+    public Polygon[] findPolygons(Image pyramidImage){
+
+    	int xShift = (int) (this.getWidth() - (pyramidRef.getWidth() * prop)) / 2;
+    	int yShift = (int) this.topBuffer;
+    	Polygon[] answer = new Polygon[4];
+    	
+    	Polygon first = new Polygon();
+    	int width = (int) (pyramidImage.getWidth(null));
+    	int height = (int) (pyramidImage.getHeight(null));
+    	
+    	first.addPoint(width/2 + xShift, 0 + yShift);
+    	first.addPoint(width/2 - width/8 + xShift, height/4 + yShift);
+    	first.addPoint(width/2 + width/8 + xShift, height/4 + yShift);
+    	
+    	Polygon second = new Polygon();
+    	second.addPoint(width/2 - width/8 + xShift, height/4 + yShift);
+    	second.addPoint(width/2 + width/8 + xShift, height/4 + yShift);
+    	second.addPoint(width/2 + width/4 + xShift, height/2 + yShift);
+    	second.addPoint(width/2 - width/4 + xShift, height/2 + yShift);
+
+    	
+    	Polygon third = new Polygon();
+    	third.addPoint(width/2 - width/4 + xShift, height/2 + yShift);
+    	third.addPoint(width/2 + width/4 + xShift, height/2 + yShift);
+    	third.addPoint(width/2 + 3 * width/8 + xShift, 3 * height/4 + yShift);
+    	third.addPoint(width/2 - 3 * width/8 + xShift, 3 * height / 4 + yShift);
+
+
+    	Polygon fourth = new Polygon();
+    	fourth.addPoint(width/2 - 3*width/8 + xShift, 3*height/4 + yShift);
+    	fourth.addPoint(width/2 + 3*width/8 + xShift, 3*height/4 + yShift);
+    	fourth.addPoint(width/2 + width/2 - 1 + xShift, height-1 + yShift);
+    	fourth.addPoint(width/2 - width/2 + xShift, height-1 + yShift);
+
+    	
+    	answer[0] = first;
+    	answer[1] = second;
+    	answer[2] = third;
+    	answer[3] = fourth;
+    	return answer;
+    
+    }
     
 
 }

@@ -30,22 +30,12 @@ public class TrophicMemberPanel extends JScrollPane{
 		
 		this.parent = parent;
 		JPanel outerPanel = new JPanel(){ 
-		    @Override
+			@Override
 		    protected void paintComponent(Graphics g) {
 		        super.paintComponent(g);
-		        Image image;
-		    	try {
-					image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
-					image = image.getScaledInstance(Utilities.west_width, Utilities.west_width, 0);
-					g.drawImage(image, 0, 0, this);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.out.println("oops");
-
-				}
+		        Utilities.paintComponent(g, this);
 
 		    }
-			
 		};
 		
 		
@@ -53,7 +43,14 @@ public class TrophicMemberPanel extends JScrollPane{
 
 		
 		if (trophicLevel == -1 || this.getTrophicLevelMembersAnswered(trophicLevel) == 0){
-			JLabel label = new JLabel();
+			JLabel label = new JLabel(){
+				@Override
+			    protected void paintComponent(Graphics g) {
+			        super.paintComponent(g);
+			        Utilities.paintComponent(g, this);
+
+			    }
+			};
 			BufferedImage image = new BufferedImage ( Utilities.east_width, 1, BufferedImage.TYPE_INT_ARGB );
 
 			ImageIcon icon = new ImageIcon(image);
@@ -74,7 +71,7 @@ public class TrophicMemberPanel extends JScrollPane{
 		TreeSet<String> correctlyPlacedAnimals = parent.correctlyPlacedAnimals;
 		TreeSet<String> finishedAnimals = parent.finishedAnimals;
 		
-		
+		parent.feedbackLabel.setText("Click on an icon to answer questions about it!");
 		
 		
 		Iterator<String> iter = correctlyPlacedAnimals.iterator();
@@ -162,19 +159,10 @@ public class TrophicMemberPanel extends JScrollPane{
 	}
 		
 		
-    @Override
+	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Image image;
-    	try {
-			image = ImageIO.read(new File("assets/cheap_diagonal_fabric/cheap_diagonal_fabric/cheap_diagonal_fabric.png"));
-			image = image.getScaledInstance(Utilities.west_width, Utilities.west_width, 0);
-			g.drawImage(image, 0, 0, this);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("oops");
-
-		}
+        Utilities.paintComponent(g, this);
 
     }
 
