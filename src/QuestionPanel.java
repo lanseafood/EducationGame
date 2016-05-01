@@ -264,9 +264,13 @@ public class QuestionPanel extends JScrollPane{
 			
 			//TODO: Remove this 
 			System.out.println(answer);
-			ansSpot.setText(answer);
+			//ansSpot.setText(answer);
 			answerButton.setText("Submit");
 			ansSpot.setDisabledTextColor(Color.BLACK);
+			
+			if (allAnswered(animalName, parent)){
+				parent.feedbackLabel.setText("You've finished this animal already!");
+			}
 			
 			if (parent.answered.get(question) != null && parent.answered.get(question)){
 				questionContainer.setBackground(Color.GREEN);
@@ -274,7 +278,8 @@ public class QuestionPanel extends JScrollPane{
 				ansSpot.setEnabled(false);
 				ansSpot.setText(answer);
 				ansSpot.setDisabledTextColor(Color.BLACK);
-				parent.feedbackLabel.setText("You've finished this animal already!");
+				ansSpot.setBackground(Color.GREEN);
+				
 			}
 			else{
 				final String copyName = new String(animalName);
@@ -284,12 +289,13 @@ public class QuestionPanel extends JScrollPane{
 					public void actionPerformed(ActionEvent e) {
 						String ansGiven = ansSpot.getText();
 						
-						if (!ansGiven.equals(answer)){
+						if (!compareAnswers(ansGiven, answer)){
 							parent.feedbackLabel.setText("Try again! Ask Watson if you need help!");
 						}
-						if (ansGiven.equals(answer)){
+						if (compareAnswers(ansGiven, answer)){
 							questionContainer.setBackground(Color.GREEN);
 							answerSlot.setBackground(Color.GREEN);
+							ansSpot.setBackground(Color.GREEN);
 							
 							parent.answered.put(question, true);
 							int id = questionIDs.get(question);
@@ -393,6 +399,34 @@ public class QuestionPanel extends JScrollPane{
         Utilities.paintComponent(g, this);
 
     }
+	
+	private boolean compareAnswers(String s1, String s2) {
+		// Build string 1
+		String[] s1_frags = s1.trim().toLowerCase().split("/s+");
+		for (int i = 0; i < s1_frags.length; i++)
+			if (s1_frags[i].matches("[0-9]+"))
+				s1_frags[i] = NumbersToWords.convert(Long.parseLong(s1_frags[i]));
+		
+
+		StringBuilder build1 = new StringBuilder();
+		for (String s :  s1_frags)
+			build1.append(s);
+		
+		// Build string 2
+		String[] s2_frags = s2.trim().toLowerCase().split("/s+");
+		for (int i = 0; i < s2_frags.length; i++)
+			if (s2_frags[i].matches("[0-9]+"))
+				s2_frags[i] = NumbersToWords.convert(Long.parseLong(s2_frags[i]));
+		
+		StringBuilder build2 = new StringBuilder();
+		for (String s :  s2_frags)
+			build2.append(s);
+		
+		
+		// Return match
+		
+		return build1.toString().equals(build2.toString());
+	}
 	
 	
 }
