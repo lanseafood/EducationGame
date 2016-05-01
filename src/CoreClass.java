@@ -36,7 +36,8 @@ public class CoreClass {
         JOptionPane.showMessageDialog(frame, "Welcome, Simba! Please drag and drop organisms into their correct trophic level on the pyramid. \n\n"
         		+ "If you don't know what a trophic level is, try asking Watson using the toolbar at the bottom! \n"
         		+ "As a matter of fact, you can ask Watson questions about anything you find confusing in the game. "
-        		+ "\nHe can tell you more about an organism you're interested in learning about. "
+        		+ "\n"
+        		+ "He can tell you more about an organism you're interested in learning about. "
         		+ "\nDon't know what an autotroph is? Watson to the rescue!");
         
     }
