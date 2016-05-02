@@ -50,6 +50,12 @@ public class SQLiteJDBC
 		"ID INT PRIMARY KEY NOT NULL, " +
 		"TITLE VARCHAR(64) NOT NULL)";
 	stmt.executeUpdate(sql);
+	
+	sql =
+		"CREATE TABLE IF NOT EXISTS RELATIONS (" +
+		"E_ID INT PRIMARY KEY NOT NULL, " +
+		"REL VARCHAR(64) NOT NULL)";
+	stmt.executeUpdate(sql);
 	stmt.close();
   }
   
@@ -59,7 +65,8 @@ public class SQLiteJDBC
 	stmt.executeUpdate("DELETE FROM PROFILES;");
 	stmt.executeUpdate("DELETE FROM QUESTIONS;");
 	stmt.executeUpdate("DELETE FROM ECOLOGY;");
-	stmt.executeUpdate("DELETE FROM TITLES;");	
+	stmt.executeUpdate("DELETE FROM TITLES;");
+	stmt.executeUpdate("DELETE FROM RELATIONS;");
 	stmt.close();
   }
   
@@ -436,6 +443,47 @@ public class SQLiteJDBC
 	String sql = String.format(
 		"DELETE FROM TITLES " +
 		"WHERE ID=%d;", id);
+	stmt.executeUpdate(sql);
+	stmt.close();
+  }
+  
+  
+  /* // RELATED Table Methods // */
+  
+  /* Add a new relation to the table */
+  public void add_Relation(int e_id, String related) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"INSERT INTO RELATIONS " +
+		"VALUES (%d, '%s');", e_id, related);
+	stmt.executeUpdate(sql);
+	stmt.close();
+  }
+  
+  /* Fetches a relation by its id in the table */
+  public ArrayList<Integer> get_Relation(int e_id) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"SELECT REL FROM RELATIONS " +
+		"WHERE E_ID=%d;", e_id);
+	ResultSet rs = stmt.executeQuery(sql);
+	rs.next();
+	String toParse = rs.getString("rel");
+	rs.close();
+	stmt.close();
+	String[] parsed = toParse.split(" ");
+	ArrayList<Integer> out = new ArrayList<Integer>();
+	for (int i = 0; i < parsed.length; i++)
+		out.add(Integer.parseInt(parsed[i]));
+	return out;
+  }
+  
+  /* Remove a title from the table */
+  public void remove_Relation(int id) throws SQLException {
+	Statement stmt = c.createStatement();
+	String sql = String.format(
+		"DELETE FROM TITLES " +
+		"WHERE E_ID=%d;", id);
 	stmt.executeUpdate(sql);
 	stmt.close();
   }

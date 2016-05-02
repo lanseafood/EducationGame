@@ -46,6 +46,9 @@ public class PyramidPanel extends JPanel {
     GameScreen parent; 
     HashMap<String, Boolean> moveCircle;
     HashMap<String, Point> originalLocations;
+    String recSpot = null;
+    
+    
     
     private int width = Utilities.small_width;
     private int height = Utilities.small_width;
@@ -60,7 +63,7 @@ public class PyramidPanel extends JPanel {
     Point sparklePoint = new Point();
     long startTime;
     long lastTime;
-    static long SPARKLE_TIMER = 1000;
+    static long SPARKLE_TIMER = 500;
     
     HashMap<String, Image> animalImages;
     
@@ -168,6 +171,11 @@ public class PyramidPanel extends JPanel {
         			timer.start();
         			
         			parent.correctlyPlacedAnimals.add(lastAnimal);
+        			
+        			if (lastAnimal.equalsIgnoreCase(recSpot)){
+        				recSpot = null;
+        				return;
+        			}
         			
         			int randomIndex = (int) Math.floor(allAnimalNames.size() * Math.random());
         			
@@ -287,11 +295,11 @@ public class PyramidPanel extends JPanel {
     	this.parent = parent;
     	
     	ellipsePoints = new HashMap<String, Point>();
-    	startingPoints = new Point[4];
+    	startingPoints = new Point[3];
     	startingPoints[0] = new Point(0, 0);
     	startingPoints[1] = new Point(4 * Utilities.small_width/2, 0);
     	startingPoints[2] = new Point(8 * Utilities.small_width/2, 0);
-    	startingPoints[3] = new Point(12 * Utilities.small_width/2, 0);
+    	
     	
 
     	
@@ -461,6 +469,10 @@ public class PyramidPanel extends JPanel {
     }
     
     public static void drawCenteredText(Graphics g, int x, int y, float size, String text) {
+    	if (text == null){
+    		return;
+    	}
+    	
     	// Create a new font with the desired size
     	Font newFont = g.getFont().deriveFont(size);
     	g.setFont(newFont);
@@ -520,6 +532,25 @@ public class PyramidPanel extends JPanel {
     	answer[3] = fourth;
     	return answer;
     
+    }
+    
+    public void updateRecSpot(String animal){
+    	
+    	if (recSpot != null){
+    		ellipsePoints.remove(recSpot);
+    		originalLocations.remove(recSpot);
+    		moveCircle.remove(recSpot);
+    		allAnimalNames.add(recSpot);
+    	}
+    	
+    	ellipsePoints.put(animal, startingPoints[2]);
+    	recSpot = animal;
+    	
+    	originalLocations.put(animal, startingPoints[2]);
+    	moveCircle.put(animal, true);
+    	
+    	allAnimalNames.remove(animal);
+
     }
     
 

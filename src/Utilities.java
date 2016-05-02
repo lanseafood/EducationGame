@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -27,6 +28,8 @@ public class Utilities {
 	static int east_width = 350;
 	
 	static TexturePaint GRAYTEX, GREENTEX;
+	
+	static Color GREEN = new Color(Integer.parseInt("7d", 16), Integer.parseInt("ca", 16), Integer.parseInt("5c", 16));
 	
 	
 	public static void paintComponent(Graphics g, JComponent j){
@@ -120,7 +123,9 @@ public class Utilities {
 			p.answeredIDs = new HashMap<Integer, Boolean>();
 			p.answered = new HashMap<String, Boolean>();
 			
-			System.out.println("Failed to load game.");
+			//System.out.println("Failed to load game.");
+			PopulateDatabase.main(null);
+			
 			e.printStackTrace();
 			return;
 		}

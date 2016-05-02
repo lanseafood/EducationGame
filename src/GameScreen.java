@@ -95,7 +95,7 @@ public class GameScreen extends JPanel {
 		header.add(feedbackLabel, BorderLayout.CENTER);
 		feedbackLabel.setText("Drag the organisms to their correct location to begin!");
 		
-		scoreLabel = new JLabel("Score is: " + profilePanel.score);
+		scoreLabel = new JLabel("Score: " + profilePanel.score);
 		scoreLabel.setFont(scoreLabel.getFont().deriveFont(24.0f));
 		scoreLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		header.add(scoreLabel, BorderLayout.EAST);

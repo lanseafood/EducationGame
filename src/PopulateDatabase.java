@@ -132,7 +132,7 @@ public class PopulateDatabase
 		//Koala:
 		db.add_QA(52, 18, "What is a baby Koala known as?", "Joey");
 		db.add_QA(53, 18, "How much do Koalas sleep per day?", "18-20 hours");
-		db.add_QA(54, 18, "What do you call the 窶�snore-like窶� sound that Koalas make?", "Bellow");
+		db.add_QA(54, 18, "What do you call the 遯ｶ�ｿｽsnore-like遯ｶ�ｿｽ sound that Koalas make?", "Bellow");
 		
 		//Leopard Tortoise:
 		db.add_QA(55, 19, "How long can an adult Leopard Tortoise grow to be?", "30 inches");
@@ -175,6 +175,29 @@ public class PopulateDatabase
 		db.add_Title(-2, "Novice");
 		db.add_Title(-3, "Legendary");
 		db.add_Title(-4, "Godlike");
+		
+		db.add_Relation(1, "2 3 6");
+		db.add_Relation(2, "1 4 7");
+		db.add_Relation(3, "4 5 6");
+		db.add_Relation(4, "3 5 7");
+		db.add_Relation(5, "3 4 8");
+		db.add_Relation(6, "3 7 8");
+		db.add_Relation(7, "8 9 10");
+		db.add_Relation(8, "7 9 10");
+		db.add_Relation(9, "7 8 10");
+		db.add_Relation(10, "7 8 9");
+		db.add_Relation(11, "12 13 14");
+		db.add_Relation(12, "11 13 14");
+		db.add_Relation(13, "11 12 14");
+		db.add_Relation(14, "11 12 13");
+		//These are just random fillers
+		db.add_Relation(15, "11 12 13");
+		db.add_Relation(16, "11 12 13");
+		db.add_Relation(17, "11 12 13");
+		db.add_Relation(18, "11 12 13");
+		db.add_Relation(19, "11 12 13");
+		db.add_Relation(20, "11 12 13");
+		
 		
 		db.print_Ecology();
 		db.print_QAs();
