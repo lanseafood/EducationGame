@@ -7,13 +7,19 @@ Please always create your own branch or work on the same branch together for mod
 
 TO RUN
 ------------
+
+OPTION 1: RUNNING FROM EXECUTABLE
+
+Extract the contents of WatsonGame.rar into a folder and run WatsonGame.jar. 
+
+OPTION 2: RUNNING FROM WITHIN ECLIPSE
+
 Open the project on Eclipse (Import from existing project). Make sure that your classpath includes all of the JAR files included in the /Lib folder. (In Eclipse, this means going to Build Path -> Libraries -> Add External JARs and then selecting all of the JAR files in the Lib folder.)
 
 Be sure to Run PopulateDatabase.java otherwise you will see a SQL exception although the app will still run. 
 
 Run as an application, not an applet.
 
-Alternatively, run the executable JAR file WatsonGame.jar in /bin for a demo. 
 
 
 
