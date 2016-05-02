@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class SetupGame{
-	List<String> ecology = ecology = Arrays.asList("Lion", "Elephant", "Giraffe", "Baobab");
+	List<String> ecology = Arrays.asList("Lion", "Elephant");
 	String username = "Simba";
 
 }

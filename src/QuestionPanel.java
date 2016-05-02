@@ -202,7 +202,7 @@ public class QuestionPanel extends JScrollPane{
 		
 		if (parent.finishedAnimals.contains(animalName)){
 			imagePanel.setOpaque(true);
-			imagePanel.setBackground(Color.GREEN);
+			imagePanel.setBackground(Utilities.GREEN);
 			
 		}
 		
@@ -237,15 +237,21 @@ public class QuestionPanel extends JScrollPane{
 			
 			String question = iter.next();
 		
+			JScrollPane p = new JScrollPane();
 			JTextArea field = new JTextArea();
 			field.setBackground(Color.LIGHT_GRAY);
 			field.setColumns(30);
 			field.setLineWrap(true);
+			field.setWrapStyleWord(true);
+			p.setViewportView(field);
 			
 			field.setText("Question " + (i) + ": " + question);
 			field.setEditable(false);
 			
-			questionContainer.add(field);
+			p.setPreferredSize(field.getPreferredSize());
+			
+			
+			questionContainer.add(p);
 			
 			JPanel answerSlot = new JPanel(){
 				@Override
@@ -273,12 +279,12 @@ public class QuestionPanel extends JScrollPane{
 			}
 			
 			if (parent.answered.get(question) != null && parent.answered.get(question)){
-				questionContainer.setBackground(Color.GREEN);
-				answerSlot.setBackground(Color.GREEN);
+				questionContainer.setBackground(Utilities.GREEN);
+				answerSlot.setBackground(Utilities.GREEN);
 				ansSpot.setEnabled(false);
 				ansSpot.setText(answer);
 				ansSpot.setDisabledTextColor(Color.BLACK);
-				ansSpot.setBackground(Color.GREEN);
+				ansSpot.setBackground(Utilities.GREEN);
 				
 			}
 			else{
@@ -293,15 +299,16 @@ public class QuestionPanel extends JScrollPane{
 							parent.feedbackLabel.setText("Try again! Ask Watson if you need help!");
 						}
 						if (compareAnswers(ansGiven, answer)){
-							questionContainer.setBackground(Color.GREEN);
-							answerSlot.setBackground(Color.GREEN);
-							ansSpot.setBackground(Color.GREEN);
+							questionContainer.setBackground(Utilities.GREEN);
+							answerSlot.setBackground(Utilities.GREEN);
+							ansSpot.setBackground(Utilities.GREEN);
 							
 							parent.answered.put(question, true);
 							int id = questionIDs.get(question);
 							parent.answeredIDs.put(id, true);
 							Utilities.saveGame(parent);
 							parent.feedbackLabel.setText("Correct answer!");
+							parent.scoreLabel.setText("Score: " + ++parent.profilePanel.score);
 							
 							ansSpot.setEnabled(false);
 							String soundName = "";
@@ -309,7 +316,10 @@ public class QuestionPanel extends JScrollPane{
 								soundName = "assets/sounds/e71020_short-a.wav";   
 								parent.finishedAnimals.add(copyName);
 								imagePanel.setOpaque(true);
-								imagePanel.setBackground(Color.GREEN);
+								imagePanel.setBackground(Utilities.GREEN);
+								String rec = getRec(copyName);
+								parent.pyramidPanel.updateRecSpot(rec);
+								
 								parent.feedbackLabel.setText("You've unlocked a title!! Check it out in your Profile page.");
 							} else {
 								soundName = "assets/sounds/e71026_short-g.wav";    
@@ -427,6 +437,37 @@ public class QuestionPanel extends JScrollPane{
 		
 		return build1.toString().equals(build2.toString());
 	}
+	
+	String getRec(String animalName){
+		SQLiteJDBC db = new SQLiteJDBC();
+		
+		try {
+			int id = db.get_Ecology_ID(animalName);
+			ArrayList<Integer> recs = db.get_Relation(id);
+			if (recs.size() == 0){
+				return null;
+			}
+			
+			Iterator<Integer> iter = recs.iterator();
+			while (iter.hasNext()){
+				int nex = iter.next();
+				String ans = db.get_Ecology_Name(nex);
+				if (!parent.correctlyPlacedAnimals.contains(ans)){
+					return ans;
+				}
+				
+				
+			}
+			
+			
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
+	
 	
 	
 }

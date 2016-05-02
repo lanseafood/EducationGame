@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -8,18 +7,17 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EmptyBorder;
 
 
 public class TrophicMemberPanel extends JScrollPane{
@@ -103,10 +101,11 @@ public class TrophicMemberPanel extends JScrollPane{
 		    	ImageIcon icon = new ImageIcon(image);
 		    	
 		    	label.setIcon(icon);
+		    	label.setBorder(new EmptyBorder(10, 0, 10, 0));
 		    	
 		    	if (finishedAnimals.contains(animalName)){
 		    		label.setOpaque(true);
-		    		label.setBackground(Color.GREEN);
+		    		label.setBackground(Utilities.GREEN);
 		    	}
 
 		    	MouseListener listener = new MouseAdapter() {

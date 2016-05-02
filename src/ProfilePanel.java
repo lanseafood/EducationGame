@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EmptyBorder;
 
 public class ProfilePanel extends JPanel implements ActionListener {
 	
@@ -38,6 +39,8 @@ public class ProfilePanel extends JPanel implements ActionListener {
 	public String animalName;
 	PyramidMasterPanel parent;
 	JPanel header;
+	
+	JLabel currentSeal = new JLabel();
 	
 	JLabel scoreText;
 	JComboBox<String> titles;
@@ -120,10 +123,22 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		load();
 
 		header = new JPanel();
-		header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
-		header.add(hi);
-		header.add(info);
-		header.add(scoreText);
+		JPanel subheader = new JPanel();
+		subheader.setLayout(new BoxLayout(subheader, BoxLayout.Y_AXIS));
+		subheader.add(hi);
+		subheader.add(info);
+		subheader.add(scoreText);
+		header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
+		header.add(subheader);
+		header.add(currentSeal);
+		
+		BufferedImage image2 = new BufferedImage ( 200, 200, BufferedImage.TYPE_INT_ARGB );
+
+		ImageIcon icon2 = new ImageIcon(image2);
+		
+		currentSeal.setIcon(icon2);
+		currentSeal.setBorder(new EmptyBorder(10,10,10,10));
+		
 		this.add(header);
 		j.add(jp);
 		j.setViewportView(jp);
@@ -232,6 +247,8 @@ public class ProfilePanel extends JPanel implements ActionListener {
 		        	    		//System.out.println(info);
 								info.setText("You are the " + currentTitle);
 		        	    		//System.out.println(info);
+								currentSeal.setIcon(sealImage);
+								
 
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
